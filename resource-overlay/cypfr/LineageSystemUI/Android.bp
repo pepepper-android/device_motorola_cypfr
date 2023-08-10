@@ -4,6 +4,6 @@
 //
 
 runtime_resource_overlay {
-    name: "EvolutionSystemUICypfr",
+    name: "LineageSystemUICypfr",
     product_specific: true,
 }

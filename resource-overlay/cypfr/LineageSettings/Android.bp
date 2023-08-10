@@ -4,6 +4,6 @@
 //
 
 runtime_resource_overlay {
-    name: "EvolutionSettingsCypfr",
+    name: "LineageSettingsCypfr",
     product_specific: true,
 }

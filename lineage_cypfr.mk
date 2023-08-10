@@ -12,7 +12,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, device/motorola/cypfr/device.mk)
 
 # Inherit some common Evolution X stuff.
-$(call inherit-product, vendor/evolution/config/common_full_phone.mk)
+$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
 PRODUCT_NAME := evolution_cypfr
 PRODUCT_DEVICE := cypfr
@@ -22,7 +22,6 @@ PRODUCT_MODEL := moto g52j 5G
 
 # Evolution X stuff
 TARGET_SUPPORTS_QUICK_TAP := true
-TARGET_USES_MINI_GAPPS := true
 
 PRODUCT_GMS_CLIENTID_BASE := android-motorola
 

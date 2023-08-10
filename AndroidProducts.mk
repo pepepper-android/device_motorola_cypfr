@@ -5,9 +5,9 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/evolution_cypfr.mk
+    $(LOCAL_DIR)/lineage_cypfr.mk
 
 COMMON_LUNCH_CHOICES := \
-    evolution_cypfr-user \
-    evolution_cypfr-userdebug \
-    evolution_cypfr-eng
+    lineage_cypfr-user \
+    lineage_cypfr-userdebug \
+    lineage_cypfr-eng
