@@ -371,8 +371,8 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     android.hardware.power-service-qti
 
-PRODUCT_PACKAGES += \
-    android.hardware.power-service.moto-common-libperfmgr
+# PRODUCT_PACKAGES += \
+#     android.hardware.power-service.moto-common-libperfmgr
 
 # QMI
 PRODUCT_PACKAGES += \

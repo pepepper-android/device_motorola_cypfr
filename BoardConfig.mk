@@ -190,7 +190,7 @@ BUILD_WITHOUT_VENDOR := false
 endif
 
 # DT2W
-TARGET_TAP_TO_WAKE_NODE := "/sys/class/sensors/dt-gesture/enable"
+# TARGET_TAP_TO_WAKE_NODE := "/sys/class/sensors/dt-gesture/enable"
 
 # Properties
 TARGET_ODM_PROP += $(DEVICE_PATH)/odm.prop
