@@ -98,6 +98,10 @@ AB_OTA_PARTITIONS += \
     vbmeta \
     vbmeta_system
 
+# Init
+TARGET_INIT_VENDOR_LIB := //$(DEVICE_PATH):init_cypfr
+TARGET_RECOVERY_DEVICE_MODULES := init_cypfr
+
 # Audio
 AUDIO_FEATURE_ENABLED_AHAL_EXT := false
 AUDIO_FEATURE_ENABLED_DLKM := true
