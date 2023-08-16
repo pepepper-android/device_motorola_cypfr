@@ -25,16 +25,29 @@
 
          Must be overridden in platform specific overlays -->
     <integer-array name="config_autoBrightnessLevels">
+        <item>1</item>
+        <item>2</item>
         <item>5</item>
         <item>10</item>
-        <item>40</item>
+        <item>29</item>
+        <item>50</item>
+        <item>90</item>
         <item>100</item>
-        <item>325</item>
-        <item>1250</item>
-        <item>3500</item>
-        <item>5500</item>
-        <item>10000</item>
-        <item>20000</item>
+        <item>150</item>
+        <item>200</item>
+        <item>300</item>
+        <item>400</item>
+        <item>500</item>
+        <item>800</item>
+        <item>1000</item>
+        <item>1300</item>
+        <item>1500</item>
+        <item>1600</item>
+        <item>1800</item>
+        <item>2000</item>
+        <item>3000</item>
+        <item>4000</item>
+        <item>8000</item>
     </integer-array>
 
     <!-- Array of desired screen brightness in nits corresponding to the lux values
@@ -52,15 +65,27 @@
          overridden in platform specific overlays -->
     <array name="config_autoBrightnessDisplayValuesNits">
         <item>3</item>
-        <item>16</item>
-        <item>40</item>
-        <item>79</item>
-        <item>92</item>
-        <item>124</item>
-        <item>165</item>
-        <item>214</item>
-        <item>296</item>
-        <item>346</item>
+        <item>10</item>
+        <item>20</item>
+        <item>50</item>
+        <item>70</item>
+        <item>85</item>
+        <item>110</item>
+        <item>130</item>
+        <item>150</item>
+        <item>180</item>
+        <item>180</item>
+        <item>180</item>
+        <item>180</item>
+        <item>225</item>
+        <item>270</item>
+        <item>300</item>
+        <item>315</item>
+        <item>330</item>
+        <item>350</item>
+        <item>380</item>
+        <item>420</item>
+        <item>450</item>
         <item>450</item>
     </array>
 
@@ -71,15 +96,23 @@
     <integer-array name="config_screenBrightnessBacklight">
         <item>0</item>
         <item>2</item>
-        <item>9</item>
-        <item>22</item>
-        <item>45</item>
-        <item>52</item>
-        <item>70</item>
-        <item>93</item>
-        <item>121</item>
-        <item>168</item>
-        <item>196</item>
+        <item>6</item>
+        <item>11</item>
+        <item>28</item>
+        <item>40</item>
+        <item>48</item>
+        <item>62</item>
+        <item>74</item>
+        <item>85</item>
+        <item>102</item>
+        <item>128</item>
+        <item>153</item>
+        <item>170</item>
+        <item>179</item>
+        <item>187</item>
+        <item>198</item>
+        <item>215</item>
+        <item>228</item>
         <item>255</item>
     </integer-array>
 
@@ -93,15 +126,23 @@
     <array name="config_screenBrightnessNits">
         <item>0</item>
         <item>3</item>
-        <item>16</item>
-        <item>40</item>
-        <item>79</item>
-        <item>92</item>
-        <item>124</item>
-        <item>165</item>
-        <item>214</item>
-        <item>296</item>
-        <item>346</item>
+        <item>10</item>
+        <item>20</item>
+        <item>50</item>
+        <item>70</item>
+        <item>85</item>
+        <item>110</item>
+        <item>130</item>
+        <item>150</item>
+        <item>180</item>
+        <item>225</item>
+        <item>270</item>
+        <item>300</item>
+        <item>315</item>
+        <item>330</item>
+        <item>350</item>
+        <item>380</item>
+        <item>420</item>
         <item>450</item>
     </array>
 
@@ -134,14 +175,7 @@
 
          @see https://www.w3.org/TR/SVG/paths.html#PathData
          -->
-    <string translatable="false" name="config_mainBuiltInDisplayCutout">
-        M 0,0
-        h -34
-        v 100
-	h 70
-	v -100
-	Z
-	</string>
+    <string translatable="false" name="config_mainBuiltInDisplayCutout">M 42,0 L -42,0 L -42,115 L 42,115 Z</string>
 
 	<!-- Indicate whether to allow the device to suspend when the screen is off
          due to the proximity sensor.  This resource should only be set to true
@@ -151,7 +185,7 @@
     <bool name="config_suspendWhenScreenOffDueToProximity">true</bool>
 
     <!-- Whether device supports double tap to wake -->
-    <bool name="config_supportDoubleTapWake">true</bool>
+    <bool name="config_supportDoubleTapWake">false</bool>
 
     <!-- Power Management: Specifies whether to decouple the auto-suspend state of the
          device from the display on/off state.
@@ -207,7 +241,7 @@
 
     <!-- Minimum screen brightness setting allowed by the power manager.
          The user is forbidden from setting the brightness below this level. -->
-    <integer name="config_screenBrightnessSettingMinimum">3</integer>
+    <integer name="config_screenBrightnessSettingMinimum">10</integer>
 
     <!-- Vibrator pattern for feedback about a long screen/key press -->
     <integer-array name="config_longPressVibePattern">
