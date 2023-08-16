@@ -27,7 +27,7 @@ index ce8b3b81b0..4864cb667f 100644
  #include <utils/Log.h>
  #include <utils/StrongPointer.h>
  #include <utils/Errors.h>
-@@ -335,10 +336,7 @@ status_t PolicySerializer::deserializeCollection(const xmlNode *cur,
+@@ -334,10 +335,7 @@ status_t PolicySerializer::deserializeCollection(const xmlNode *cur,
                              Trait::collectionTag);
                          return status;
                      }
@@ -39,7 +39,7 @@ index ce8b3b81b0..4864cb667f 100644
                  }
              }
          }
-@@ -807,6 +805,7 @@ std::variant<status_t, ModuleTraits::Element> PolicySerializer::deserialize<Modu
+@@ -679,6 +677,7 @@ std::variant<status_t, ModuleTraits::Element> PolicySerializer::deserialize<Modu
          ALOGE("%s: No %s found", __func__, Attributes::name);
          return BAD_VALUE;
      }
@@ -47,7 +47,7 @@ index ce8b3b81b0..4864cb667f 100644
      uint32_t versionMajor = 0, versionMinor = 0;
      std::string versionLiteral = getXmlAttribute(cur, Attributes::version);
      if (!versionLiteral.empty()) {
-@@ -832,6 +831,27 @@ std::variant<status_t, ModuleTraits::Element> PolicySerializer::deserialize<Modu
+@@ -704,6 +703,27 @@ std::variant<status_t, ModuleTraits::Element> PolicySerializer::deserialize<Modu
      if (status != NO_ERROR) {
          return status;
      }

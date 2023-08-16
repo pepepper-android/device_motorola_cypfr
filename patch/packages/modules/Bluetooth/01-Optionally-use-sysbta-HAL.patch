@@ -55,7 +55,7 @@ index 87dd450997..36d5fa5e86 100644
  
  #define BLUETOOTH_AUDIO_HAL_PROP_DISABLED \
    "persist.bluetooth.bluetooth_audio_hal.disabled"
-@@ -115,6 +116,12 @@ class BluetoothAudioClientInterface {
+@@ -117,6 +118,12 @@ class BluetoothAudioClientInterface {
    //     "android.hardware.bluetooth.audio.IBluetoothAudioProviderFactory/default";
    static inline const std::string kDefaultAudioProviderFactoryInterface =
        std::string() + IBluetoothAudioProviderFactory::descriptor + "/default";
