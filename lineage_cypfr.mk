@@ -14,7 +14,7 @@ $(call inherit-product, device/motorola/cypfr/device.mk)
 # Inherit some common Evolution X stuff.
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
-PRODUCT_NAME := evolution_cypfr
+PRODUCT_NAME := lineage_cypfr
 PRODUCT_DEVICE := cypfr
 PRODUCT_MANUFACTURER := motorola
 PRODUCT_BRAND := motorola
