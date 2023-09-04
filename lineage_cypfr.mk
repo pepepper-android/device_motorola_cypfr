@@ -27,6 +27,6 @@ PRODUCT_GMS_CLIENTID_BASE := android-motorola
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
     TARGET_PRODUCT=cypfr_g \
-    PRIVATE_BUILD_DESC="cypfr_g-user 12 S3RYBS32M.168-19-5-3 5e11d release-keys"
+    PRIVATE_BUILD_DESC="cypfr_g-user 12 S3RYBS32M.168-19-5-7 c7309 release-keys"
 
-BUILD_FINGERPRINT := motorola/cypfr_g/cypfr:12/S3RYBS32M.168-19-5-3/5e11d:user/release-keys
+BUILD_FINGERPRINT := motorola/cypfr_g/cypfr:12/S3RYBS32M.168-19-5-7/c7309:user/release-keys
