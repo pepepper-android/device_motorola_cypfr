@@ -60,7 +60,9 @@ vendor.voice.path.for.pcm.voip=true
 # Audio feature
 vendor.audio.feature.dynamic_ecns.enable=false
 vendor.audio.feature.spkr_prot.enable=false
-vendor.audio.feature.a2dp_offload.enable=true
+# A2DP is handled by sysbta (system-side SW encoding), not by the primary
+# vendor HAL. See product.prop / device/motorola/cypfr/patch.
+vendor.audio.feature.a2dp_offload.enable=false
 vendor.audio.feature.afe_proxy.enable=true
 vendor.audio.feature.anc_headset.enable=false
 vendor.audio.feature.battery_listener.enable=true
@@ -108,7 +110,10 @@ ro.config.vc_call_vol_steps=8
 # Bluetooth
 bluetooth.device.default_name=moto g52j 5G
 persist.vendor.bt.a2dp_offload_cap=sbc-aptx-aptxtws-aptxhd-aac-ldac
-persist.bluetooth.a2dp_offload.disabled=false
+# Keep this consistent with product.prop. /product/build.prop is loaded after
+# /vendor/build.prop and wins, but a prebuilt/third-party vendor.img carries its
+# own copy of these, so do not leave a contradiction in our own vendor.prop.
+persist.bluetooth.a2dp_offload.disabled=true
 persist.vendor.bt.aac_frm_ctl.enabled=true
 persist.vendor.bt.aac_vbr_frm_ctl.enabled=true
 persist.vendor.qcom.bluetooth.enable.splita2dp=true
@@ -116,7 +121,7 @@ persist.vendor.qcom.bluetooth.a2dp_offload_cap=sbc-aptx-aptxtws-aptxhd-aac-ldac-
 persist.vendor.qcom.bluetooth.twsp_state.enabled=false
 persist.vendor.qcom.bluetooth.scram.enabled=false
 persist.vendor.qcom.bluetooth.aac_vbr_ctl.enabled=false
-ro.bluetooth.a2dp_offload.supported=true
+ro.bluetooth.a2dp_offload.supported=false
 ro.vendor.bluetooth.wipower=false
 vendor.qcom.bluetooth.soc=hastings
 
