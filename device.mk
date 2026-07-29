@@ -305,14 +305,27 @@ PRODUCT_PACKAGES += \
     netutils-wrapper-1.0
 
 # NFC
+# cypfr has an NXP SN100x controller, not an ST21NFC: stock ships only
+# vendor.nxp.hardware.nfc@2.0-service / nfc_nci.nqx.default.hw.so and sets
+# ro.vendor.hw.nfc=ese_nq. The ST HAL that used to be listed here
+# (android.hardware.nfc@1.2-service.st, nfc_nci.st21nfc.default) builds fine
+# from hardware/st/nfc, which is why the mistake was never noticed -- it just
+# cannot drive this hardware. The NXP HAL comes from the vendor blobs instead.
 PRODUCT_PACKAGES += \
+    android.hardware.nfc@1.0.vendor \
+    android.hardware.nfc@1.1.vendor \
     android.hardware.nfc@1.2.vendor \
-    android.hardware.nfc@1.2-service.st \
-    android.hardware.secure_element@1.2.vendor \
     com.android.nfc_extras \
     libchrome.vendor \
-    Tag \
-    nfc_nci.st21nfc.default
+    Tag
+
+# Secure element. The FeliCa applet used by Osaifu-Keitai lives in the eSE, so
+# the SE HAL (reached from apps through OMAPI) and the eSE power manager are
+# both required. Services and impl come from the vendor blobs.
+PRODUCT_PACKAGES += \
+    android.hardware.secure_element@1.0.vendor \
+    android.hardware.secure_element@1.1.vendor \
+    android.hardware.secure_element@1.2.vendor
 
 # OMX
 PRODUCT_PACKAGES += \

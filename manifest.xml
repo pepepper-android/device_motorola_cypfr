@@ -88,6 +88,17 @@
             <instance>default</instance>
         </interface>
     </hal>
+    <!-- vendor.qti.secure_element@1.2-service registers ISecureElement/eSE1.
+         Osaifu-Keitai reaches the FeliCa applet in the eSE through it (OMAPI). -->
+    <hal format="hidl">
+        <name>android.hardware.secure_element</name>
+        <transport>hwbinder</transport>
+        <version>1.2</version>
+        <interface>
+            <name>ISecureElement</name>
+            <instance>eSE1</instance>
+        </interface>
+    </hal>
     <hal format="hidl">
         <name>android.hardware.radio</name>
         <transport>hwbinder</transport>

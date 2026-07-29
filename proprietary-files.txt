@@ -523,11 +523,41 @@ vendor/firmware/aw882xx_pid_2113_acf.bin
 # NFC
 #vendor/bin/STFlashTool
 
+# NFC - NXP SN100x HAL.
+# cypfr has an NXP SN100x controller with an integrated eSE, not an ST21NFC:
+# stock ships only vendor.nxp.hardware.nfc@2.0-service / nfc_nci.nqx.default.hw.so
+# and sets ro.vendor.hw.nfc=ese_nq. Nothing in the tree builds an NXP SN100 HAL,
+# so it has to come from the stock vendor image.
+vendor/bin/hw/vendor.nxp.hardware.nfc@2.0-service
+vendor/etc/init/vendor.nxp.hardware.nfc@2.0-service.rc
+vendor/lib64/nfc_nci.nqx.default.hw.so
+vendor/lib64/vendor.nxp.hardware.nfc@2.0.so
+
+# Secure element - the FeliCa applet lives in the eSE, so Osaifu-Keitai needs
+# both the SE HAL (OMAPI) and the eSE power manager. libchrome is pulled in by
+# se_nq_extn_client, but device.mk already builds libchrome.vendor from source,
+# so that one is deliberately not taken as a blob.
+vendor/bin/hw/vendor.qti.esepowermanager@1.1-service
+vendor/bin/hw/vendor.qti.secure_element@1.2-service
+vendor/etc/init/vendor.qti.esepowermanager@1.1-service.rc
+vendor/etc/init/vendor.qti.secure_element@1.2-service.rc
+vendor/lib64/android.hardware.secure_element@1.0-impl.so
+vendor/lib64/jcos_nq_client.so
+vendor/lib64/ls_nq_client.so
+vendor/lib64/se_nq_extn_client.so
+vendor/lib64/vendor.qti.esepowermanager@1.0.so
+vendor/lib64/vendor.qti.esepowermanager@1.1.so
+
 # NFC - configs
 #vendor/etc/libnfc-hal-st.conf
 vendor/etc/libnfc-mtp-SN100.conf
 vendor/etc/libnfc-mtp-SN100_38_4MHZ.conf
 #vendor/etc/libnfc-nci-st.conf
+# Read by libnfc-nci itself, selected via persist.nfc_cfg.config_file_name.
+# Without it NfcConfig falls back to some other libnfc-nci.conf on the device,
+# which carries values meant for a different board (NFA_MAX_EE_SUPPORTED,
+# POLLING_TECH_MASK, and no DEFAULT_SYS_CODE).
+vendor/etc/libnfc-nci_SN100.conf
 vendor/etc/libnfc-nxp-pnscr.conf
 vendor/etc/libnfc-qrd-SN100.conf
 vendor/etc/libnfc-qrd-SN100_38_4MHZ.conf
