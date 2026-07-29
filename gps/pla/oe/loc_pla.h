@@ -75,7 +75,9 @@ extern "C" {
 
 #ifndef FEATURE_EXTERNAL_AP
 #include <cutils/properties.h>
-#include <cutils/threads.h>
+// cutils/threads.h was removed in Android 15. Only gettid() was used from it,
+// and bionic declares that in <unistd.h>.
+#include <unistd.h>
 #include <cutils/sched_policy.h>
 #else
 #define set_sched_policy(a, b)

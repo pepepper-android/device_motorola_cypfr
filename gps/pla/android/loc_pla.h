@@ -40,7 +40,9 @@ extern "C" {
 #endif
 
 #include <cutils/properties.h>
-#include <cutils/threads.h>
+// cutils/threads.h was removed in Android 15. Only gettid() was used from it,
+// and bionic declares that in <unistd.h>.
+#include <unistd.h>
 #include <cutils/sched_policy.h>
 #include <cutils/android_filesystem_config.h>
 #include <string.h>
