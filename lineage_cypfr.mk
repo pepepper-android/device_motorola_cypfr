@@ -25,8 +25,15 @@ TARGET_SUPPORTS_QUICK_TAP := true
 
 PRODUCT_GMS_CLIENTID_BASE := android-motorola
 
+# Android 15 generates build.prop in soong, and gen_build_prop.py only accepts
+# overrides whose key already exists in product_config.json:
+#   Key "TARGET_PRODUCT" isn't a valid prop override
+# TARGET_PRODUCT is now DeviceProduct, and PRIVATE_BUILD_DESC is gone -- the
+# description is derived, so override the derived values directly. override_config()
+# runs after BuildFlavor/BuildDesc are computed, so setting them here takes effect.
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    TARGET_PRODUCT=cypfr_g \
-    PRIVATE_BUILD_DESC="cypfr_g-user 12 S3RYBS32M.168-19-5-7 c7309 release-keys"
+    DeviceProduct=cypfr_g \
+    BuildFlavor=cypfr_g-user \
+    BuildDesc="cypfr_g-user 12 S3RYBS32M.168-19-5-7 c7309 release-keys"
 
 BUILD_FINGERPRINT := motorola/cypfr_g/cypfr:12/S3RYBS32M.168-19-5-7/c7309:user/release-keys
