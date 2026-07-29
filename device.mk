@@ -29,6 +29,16 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 # Product characteristics
 PRODUCT_CHARACTERISTICS := default
 
+# ART's userfaultfd GC needs userfaultfd(2) *and* MREMAP_DONTUNMAP. This device
+# ships a prebuilt 5.4.210-moto kernel, and MREMAP_DONTUNMAP appears nowhere in
+# kernel/motorola/msm-5.4 -- it landed upstream in 5.7 and this vendor kernel
+# carries no backport, unlike the GKI android12-5.4 branches.
+# build/soong/scripts/uffd_gc_utils.py cannot tell on its own because the
+# version string has no -android<release>- tag, so it refuses to guess:
+#   Unable to determine UFFD GC flag for kernel version "5.4.210-moto-...".
+# Do not flip this to true: ART would pick a GC the kernel cannot support.
+PRODUCT_ENABLE_UFFD_GC := false
+
 # Enable project quotas and casefolding for emulated storage without sdcardfs
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
