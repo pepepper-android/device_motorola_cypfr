@@ -520,6 +520,18 @@ vendor/usr/keylayout/uinput-egis.kl
 vendor/firmware/aw882xx_pid_2113_acf.bin
 #vendor/firmware/goodix_firmware.bin
 
+# Audio - sound trigger.
+# Built from source this needs $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr, which
+# does not exist because TARGET_FORCE_PREBUILT_KERNEL skips the kernel build:
+#   ninja: '.../obj/KERNEL_OBJ/usr', needed by
+#   '.../sound_trigger.primary.holi_intermediates/sound_trigger_hw.o',
+#   missing and no known rule to make it
+# Taking the stock blob also avoids compiling against headers that, as
+# vendor/lineage/build/tasks/kernel.mk warns, need not match the ABI of the
+# prebuilt kernel we actually ship.
+vendor/lib/hw/sound_trigger.primary.holi.so
+vendor/lib64/hw/sound_trigger.primary.holi.so
+
 # NFC
 #vendor/bin/STFlashTool
 

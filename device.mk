@@ -127,8 +127,7 @@ PRODUCT_PACKAGES += \
     libeffectproxy \
     libldnhncr \
     libreverbwrapper \
-    libvisualizer \
-    sound_trigger.primary.holi
+    libvisualizer
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/audio/audio_policy_configuration.xml

@@ -117,7 +117,15 @@ AUDIO_FEATURE_ENABLED_INSTANCE_ID := true
 AUDIO_FEATURE_ENABLED_PROXY_DEVICE := true
 AUDIO_FEATURE_ENABLED_SSR := false
 AUDIO_FEATURE_ENABLED_SVA_MULTI_STAGE := true
-BOARD_SUPPORTS_OPENSOURCE_STHAL := true
+# The open source sound trigger HAL wants kernel headers:
+#   ninja: '.../obj/KERNEL_OBJ/usr', needed by
+#   '.../sound_trigger.primary.holi_intermediates/sound_trigger_hw.o',
+#   missing and no known rule to make it
+# Nothing produces them because TARGET_FORCE_PREBUILT_KERNEL skips the kernel
+# build, and generating them anyway would mean compiling against headers that
+# need not match the ABI of the prebuilt kernel we ship. sound_trigger.primary
+# is taken from the stock vendor image instead.
+BOARD_SUPPORTS_OPENSOURCE_STHAL := false
 BOARD_SUPPORTS_SOUND_TRIGGER := true
 BOARD_USES_ALSA_AUDIO := true
 
