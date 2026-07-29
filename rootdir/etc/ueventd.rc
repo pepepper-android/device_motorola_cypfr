@@ -382,6 +382,15 @@ firmware_directories /vendor/firmware_mnt/image/
 /sys/class/sensors/Moto\ CapSense\ Ch*   poll_delay   0660    root    input
 
 # LED class devices
+# android.hardware.lights.moto.rc chowns these from an "on boot" block, which runs
+# once and silently does nothing if the LED driver has not registered the class
+# device yet -- the node then keeps root:root 0644 and the lights HAL, which runs
+# as system, cannot write it. ueventd applies permissions when the node actually
+# appears, so do it here as well.
+/sys/class/leds/charging        brightness       0664    system    system
+/sys/class/leds/charging        delay_on         0664    system    system
+/sys/class/leds/charging        delay_off        0664    system    system
+
 /sys/class/leds/red      delay_on     0640    system    system
 /sys/class/leds/red      delay_off    0640    system    system
 /sys/class/leds/red      breath       0640    system    system
