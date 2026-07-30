@@ -38,8 +38,13 @@
     <hal format="hidl">
         <name>android.hardware.drm</name>
         <transport>hwbinder</transport>
-        <fqname>@1.3::ICryptoFactory/widevine</fqname>
-        <fqname>@1.3::IDrmFactory/widevine</fqname>
+        <!-- widevine is declared by the blob's own manifest fragment,
+             /vendor/etc/vintf/manifest/manifest_android.hardware.drm@1.3-service.widevine.xml.
+             Declaring it here as well makes checkvintf refuse the whole manifest:
+               HAL "android.hardware.drm" has a conflict: Conflicting FqInstance:
+               @1.3::ICryptoFactory/widevine (from /vendor/etc/vintf/manifest.xml) vs.
+               @1.3::ICryptoFactory/widevine (from .../manifest_android...widevine.xml)
+             wfdhdcp has no fragment of its own, so it stays. -->
         <fqname>@1.3::ICryptoFactory/wfdhdcp</fqname>
         <fqname>@1.3::IDrmFactory/wfdhdcp</fqname>
     </hal>
