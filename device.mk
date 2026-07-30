@@ -502,8 +502,14 @@ PRODUCT_COPY_FILES += \
 PRODUCT_ENFORCE_ARTIFACT_PATH_REQUIREMENTS := strict
 
 # WiFi
+# android.hardware.wifi@1.0-service is gone: Android 15 dropped the HIDL Wi-Fi
+# HAL (hardware/interfaces/wifi/1.0/default no longer exists), so the request was
+# silently discarded by ALLOW_MISSING_DEPENDENCIES and the built vendor image had
+# no IWifi implementation at all -- WifiService cannot bring the chip up without
+# one. Stock ships android.hardware.wifi@1.0-service; the AIDL service is its
+# replacement.
 PRODUCT_PACKAGES += \
-    android.hardware.wifi@1.0-service \
+    android.hardware.wifi-service \
     hostapd \
     libwpa_client \
     libwifi-hal-ctrl \
