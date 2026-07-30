@@ -237,6 +237,17 @@ SELINUX_IGNORE_NEVERALLOWS := true
 # Treble
 BOARD_VNDK_VERSION := current
 
+# Stock ships EuiccGoogle and the MobileFeliCa* apps in priv-app with DEFLATED
+# classes.dex, and all of them carry an APK Signing Block v2. soong refuses that
+# combination:
+#   MobileFeliCaClient.apk: Contains compressed dex files and is privileged
+# Repacking them with the dex stored is not an option -- v2 signs the whole
+# archive, so changing an entry's compression invalidates it. Dropping
+# privileged: true is not an option either. So stop requiring uncompressed dex in
+# priv-app, which is how the device shipped anyway. The cost is that ART extracts
+# those dex files instead of mapping them straight out of the APK.
+DONT_UNCOMPRESS_PRIV_APPS_DEXS := true
+
 # Verified Boot
 BOARD_AVB_ENABLE := true
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
