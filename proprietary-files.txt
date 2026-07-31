@@ -1806,3 +1806,22 @@ vendor/bin/wdsdaemon
 # these two.
 vendor/lib/hw/memtrack.default.so
 vendor/lib64/hw/memtrack.default.so
+
+# Touchscreen firmware
+# The panel is qcom,mdss_dsi_tm_ili7807s_678_fhd_video, and the ILITEK driver
+# resolves that to the TM_7807S module, which asks for ILITEK_FW_TM_7807S:
+#
+#   ILITEK: (ili_update_tp_module_info, 1173): Found TM_7807S module:
+#     fw path = (/sdcard/ILITEK_FW_TM_7807S, ILITEK_FW_TM_7807S, 1)
+#
+# Neither file was extracted, so the firmware upgrade failed, the controller
+# came up with nothing to run and never asserted its interrupt:
+#
+#   ILITEK: (ili_ic_check_int_pulse, 558): Error! INT pulse no detected
+#   ILITEK: (ili_ic_check_busy, 590): Read check busy failed
+#
+# The input device (TM_7807S) still registers, so Android believes there is a
+# touchscreen; it just never reports anything. CSOT is the other panel supplier
+# for this model - v7 shipped both, so keep both.
+vendor/firmware/ILITEK_FW_CSOT_7807S
+vendor/firmware/ILITEK_FW_TM_7807S
