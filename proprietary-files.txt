@@ -108,17 +108,40 @@ vendor/lib64/soundfx/libqcreverb.so
 vendor/lib64/soundfx/libqcvirt.so
 vendor/lib64/soundfx/libshoebox.so
 
-# unneeded
-#vendor/lib/soundfx/libswdap.so
-#vendor/lib/soundfx/libswgamedap.so
-#vendor/lib/soundfx/libdlbvol.so
-#vendor/lib/libdapparamstorage.so
-#vendor/lib/libdlbpreg.so
-#vendor/lib64/soundfx/libdlbvol.so
-#vendor/lib64/soundfx/libswdap.so
-#vendor/lib64/soundfx/libswgamedap.so
-#vendor/lib64/libdapparamstorage.so
-#vendor/lib64/libdlbpreg.so
+# These were marked "unneeded" - they are not. /vendor/etc/audio_effects.xml is a
+# blob and it declares the Dolby listeners against library "dvl" = libdlbvol.so:
+#   <effect name="dlb_music_listener"  library="dvl" uuid="40f66c8b-..."/>
+#   <effect name="dlb_system_listener" library="dvl" uuid="874db4d8-..."/>
+# With the library absent every media session failed to attach its effect and
+# playback came out silent:
+#   E AudioPolicyEffects: failed to create Fx dlb_system_listener on session 145
+#   E AudioEffect: AudioFlinger could not create effect NULL / 874db4d8-..., status: -2
+#
+# The 32-bit copies are the ones that matter: android.hardware.audio.service is
+# 32-bit and loads /vendor/lib/soundfx. libdlbpreg, libdapparamstorage and
+# vendor.dolby.hardware.dms@2.0 are their DT_NEEDED, and dax-default.xml is the
+# tuning libswdap reads.
+vendor/lib/soundfx/libdlbvol.so
+vendor/lib/soundfx/libswdap.so
+vendor/lib/soundfx/libswgamedap.so
+vendor/lib64/soundfx/libdlbvol.so
+vendor/lib64/soundfx/libswdap.so
+vendor/lib64/soundfx/libswgamedap.so
+vendor/lib/libdapparamstorage.so
+vendor/lib/libdlbpreg.so
+vendor/lib/vendor.dolby.hardware.dms@2.0.so
+vendor/lib64/libdapparamstorage.so
+vendor/lib64/libdlbpreg.so
+vendor/lib64/vendor.dolby.hardware.dms@2.0.so
+vendor/etc/dolby/dax-default.xml
+
+# Also missing from soundfx, and also referenced by audio_effects.xml.
+vendor/lib/soundfx/libqcomvisualizer.so
+vendor/lib/soundfx/libqcomvoiceprocessing.so
+vendor/lib/soundfx/libvolumelistener.so
+vendor/lib64/soundfx/libqcomvisualizer.so
+vendor/lib64/soundfx/libqcomvoiceprocessing.so
+vendor/lib64/soundfx/libvolumelistener.so
 
 # Bluetooth
 vendor/bin/hw/android.hardware.bluetooth@1.0-service-qti
@@ -416,6 +439,18 @@ vendor/lib/camera/com.mot.eeprom.mot_gt24p128e_s5kjn1_eeprom.so
 vendor/lib64/camera/com.mot.eeprom.mot_cypfg_gc02m1_otp.so
 vendor/lib64/camera/com.mot.eeprom.mot_cypfg_s5k4h7_otp.so
 vendor/lib64/camera/com.mot.eeprom.mot_gt24p128e_s5kjn1_eeprom.so
+vendor/lib64/camera/com.mot.eeprom.mot_gt24p64e_s5k3l6_eeprom.so
+# com.qti.node.swmctf.so dlopens libmctfengine_stub.so, and when that failed the
+# node's own destructor took the whole camera provider down with it - which is
+# what made the camera app die the moment it switched to video mode:
+#   E CHINODEUTIL dlopen failed: library "/vendor/lib64/libmctfengine_stub.so" not found
+#   E SWMCTF   Unable to open /vendor/lib64/libmctfengine_stub.so library
+#   F DEBUG    signal 11 (SIGSEGV) ... ChiSWMCTFNode::~ChiSWMCTFNode()
+# The stub then loads libmctfengine_skel.so onto the cDSP over FastRPC; without
+# that one MCTF still initialises but disables itself.
+vendor/lib/libmctfengine_stub.so
+vendor/lib64/libmctfengine_stub.so
+vendor/lib/rfsa/adsp/libmctfengine_skel.so
 
 # Camera - etc
 vendor/etc/camera/SwadAIMod.bin
