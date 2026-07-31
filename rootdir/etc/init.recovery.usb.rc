@@ -50,29 +50,23 @@ on property:ro.boot.usbcontroller=*
     setprop sys.usb.controller ${ro.boot.usbcontroller}
     write /sys/class/udc/${ro.boot.usbcontroller}/device/../mode peripheral
 
-on property:sys.usb.config=adb && property:sys.usb.ffs.ready=1 && property:sys.usb.configfs=1
-    write /config/usb_gadget/g1/UDC "none"
-    write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "Motorola Recovery ADB"
-    rm /config/usb_gadget/g1/configs/b.1/f1
-    rm /config/usb_gadget/g1/configs/b.1/f2
-    rm /config/usb_gadget/g1/configs/b.1/f3
-    write /config/usb_gadget/g1/idVendor 0x22b8
-    write /config/usb_gadget/g1/idProduct 0x2e81
-    symlink /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f1
-    write /config/usb_gadget/g1/UDC ${sys.usb.controller}
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=fastboot && property:sys.usb.ffs.ready=1 && property:sys.usb.configfs=1
-    write /config/usb_gadget/g1/UDC "none"
-    write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "Motorola Recovery Fastboot"
-    rm /config/usb_gadget/g1/configs/b.1/f1
-    rm /config/usb_gadget/g1/configs/b.1/f2
-    rm /config/usb_gadget/g1/configs/b.1/f3
-    write /config/usb_gadget/g1/idVendor 0x22b8
-    write /config/usb_gadget/g1/idProduct 0x2e80
-    symlink /config/usb_gadget/g1/functions/ffs.fastboot /config/usb_gadget/g1/configs/b.1/f1
-    write /config/usb_gadget/g1/UDC ${sys.usb.controller}
-    setprop sys.usb.state ${sys.usb.config}
+# The "sys.usb.config=adb" and "=fastboot" gadget blocks that used to live here
+# are gone on purpose.
+#
+# init parses /system/etc/init/hw/init.rc first and only then the files it
+# imports, so the generic blocks were registered before ours and ran first for
+# the same trigger. The generic block symlinks ffs.adb into the config and binds
+# the UDC; ours then immediately wrote UDC "none" and unlinked f1 before
+# rebuilding the same configuration. Tearing the FunctionFS instance down that
+# way throws away the descriptors adbd had already written, so the gadget came
+# back up without a working adb interface and the host saw nothing at all - not
+# even an "unauthorized" device.
+#
+# sideload was unaffected precisely because we had no block for it: the generic
+# configuration was left alone and worked. Deleting these two blocks makes adb
+# and fastboot take that same path. The generic blocks pick up our VID/PID from
+# ro.recovery.usb.{vid,adb.pid,fastboot.pid}, which device.mk sets, so nothing
+# device specific is lost.
 
 on fs
     wait /dev/block/platform/soc/${ro.boot.bootdevice}
