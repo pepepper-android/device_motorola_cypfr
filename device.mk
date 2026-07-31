@@ -489,9 +489,13 @@ PRODUCT_PACKAGES_DEBUG += \
     update_engine_client
 
 # USB
+# init.qcom.usb.rc is not listed here: it now comes from the stock vendor image
+# along with the rest of the vendor init tree (proprietary-files.txt, "Vendor
+# init"), and two rules writing the same path would collide. The CAF copy under
+# vendor/qcom/opensource/usb/etc is a different lineage from Motorola's, which is
+# what init.mmi.usb.rc is written against, and v7 shipped the stock one.
 PRODUCT_PACKAGES += \
     android.hardware.usb@1.3-service-qti \
-    init.qcom.usb.rc \
     init.qcom.usb.sh
 
 PRODUCT_SOONG_NAMESPACES += vendor/qcom/opensource/usb/etc

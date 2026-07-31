@@ -1716,3 +1716,80 @@ vendor/lib/libprotobuf-cpp-full-3.9.1.so
 vendor/lib/libprotobuf-cpp-lite-3.9.1.so
 vendor/lib64/libprotobuf-cpp-full-3.9.1.so
 vendor/lib64/libprotobuf-cpp-lite-3.9.1.so
+
+# Vendor init
+# /system/etc/init/hw/init.rc imports /vendor/etc/init/hw/init.${ro.hardware}.rc,
+# i.e. init.qcom.rc. Nothing in the tree provides it: device/qcom/common is not in
+# the manifest, and the only rootdir copy that would have installed the Motorola
+# ones (device/motorola/common/common.mk) is unreachable - it is inherited solely
+# from device/motorola/sm4350-common/platform.mk, which nothing inherits, and it
+# calls copy-files-recursive, which is not defined anywhere either.
+#
+# init treats a missing import as a warning, so the device booted with no vendor
+# init definitions at all: no vendor.init_modprobe, hence not a single module out
+# of /vendor/lib/modules, hence no vendor HAL - no display composer (stuck on the
+# bootloader logo) and no USB HAL (no adb). Floko v7 shipped these 15 files and
+# they are byte-identical to the stock vendor image, so take them from there.
+vendor/etc/init/hw/init.mmi.charge_only.rc
+vendor/etc/init/hw/init.mmi.chipset.rc
+vendor/etc/init/hw/init.mmi.debug.rc
+vendor/etc/init/hw/init.mmi.diag.rc
+vendor/etc/init/hw/init.mmi.diag_mdlog.rc
+vendor/etc/init/hw/init.mmi.overlay.rc
+vendor/etc/init/hw/init.mmi.rc
+vendor/etc/init/hw/init.mmi.tcmd.rc
+vendor/etc/init/hw/init.mmi.usb.rc
+vendor/etc/init/hw/init.mmi.wlan.rc
+vendor/etc/init/hw/init.qcom.factory.rc
+vendor/etc/init/hw/init.qcom.rc
+vendor/etc/init/hw/init.qcom.usb.rc
+vendor/etc/init/hw/init.qti.kernel.rc
+vendor/etc/init/hw/init.target.rc
+
+# Vendor init - scripts and binaries the rc files above reference and that were
+# likewise missing. All present in v7.
+vendor/bin/apanic_copy.sh
+vendor/bin/apanic_save.sh
+vendor/bin/aplogd
+vendor/bin/batt_health
+vendor/bin/capsense_reset
+vendor/bin/cnss_diag
+vendor/bin/diag_mdlog
+vendor/bin/diag_mdlog-getlogs
+vendor/bin/diag_mdlog-wrap
+vendor/bin/diag_socket_log
+vendor/bin/ftmdaemon
+vendor/bin/ftmipcd
+vendor/bin/hardware_revisions.sh
+vendor/bin/hw/egis_ident
+vendor/bin/init.class_main.sh
+vendor/bin/init.crda.sh
+vendor/bin/init.kernel.post_boot.sh
+vendor/bin/init.mdm.sh
+vendor/bin/init.mmi.block_perm.sh
+vendor/bin/init.mmi.boot.sh
+vendor/bin/init.mmi.mdlog-getlogs.sh
+vendor/bin/init.mmi.shutdown.sh
+vendor/bin/init.mmi.touch.sh
+vendor/bin/init.mmi.usb.sh
+vendor/bin/init.mmi.wlan-getlogs.sh
+vendor/bin/init.oem.fingerprint.overlay.sh
+vendor/bin/init.oem.fingerprint2.sh
+vendor/bin/init.oem.hw.sh
+vendor/bin/init.qcom.class_core.sh
+vendor/bin/init.qcom.early_boot.sh
+vendor/bin/init.qcom.post_boot.sh
+vendor/bin/init.qcom.sdio.sh
+vendor/bin/init.qcom.sh
+vendor/bin/init.qti.early_init.sh
+vendor/bin/init.qti.kernel.sh
+vendor/bin/nqnfcinfo
+vendor/bin/pstore_annotate.sh
+vendor/bin/ssgqmigd
+vendor/bin/ssr_diag
+vendor/bin/ssr_setup
+vendor/bin/subsystem_ramdump
+vendor/bin/tcmd
+vendor/bin/tcmdhelp
+vendor/bin/vendor_modprobe.sh
+vendor/bin/wdsdaemon
