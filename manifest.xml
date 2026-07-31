@@ -104,6 +104,32 @@
             <instance>eSE1</instance>
         </interface>
     </hal>
+    <!-- hwservicemanager refuses to register an interface the device manifest
+         does not declare, so vendor.qti.esepowermanager@1.1-service died on every
+         start:
+
+           Abort message: 'Error while registering eSE power manager service: 1'
+
+         Stock declares it in /odm/etc/vintf/manifest_sku-ds-nfc_ese.xml, one of
+         the per-SKU fragments that add-device-sku installs from
+         device/motorola/common/common.mk - which nothing inherits, so it never
+         reached the image. Declare it here instead.
+
+         The same fragment also declares vendor.qti.hardware.qteeconnector@1.0 and
+         a SIM1 instance of ISecureElement. Neither is added: no qteeconnector
+         service is built, and whether our secure_element service registers SIM1
+         is unverified. Declaring a HIDL interface with nothing behind it is not
+         harmless - getService() blocks forever on it, which is what left the boot
+         hanging on memtrack and on the USB gadget HAL. -->
+    <hal format="hidl">
+        <name>vendor.qti.esepowermanager</name>
+        <transport>hwbinder</transport>
+        <version>1.1</version>
+        <interface>
+            <name>IEsePowerManager</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
     <hal format="hidl">
         <name>android.hardware.radio</name>
         <transport>hwbinder</transport>
