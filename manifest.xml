@@ -190,10 +190,26 @@
             <instance>default</instance>
         </interface>
     </hal>
+    <!-- 1.1, not 1.0: ipacm registers IOffloadControl at @1.1 and hwservicemanager
+         refuses anything the manifest does not declare at that exact version -
+
+           E HidlServiceManagement: Service android.hardware.tetheroffload.control@1.1::
+             IOffloadControl/default must be in VINTF manifest in order to register/get.
+           E IPAHALService: Failed to register IOffloadControl
+
+         while IOffloadConfig, which it registers at @1.0, went in fine. The
+         framework asks for @1.0 and a @1.1 registration satisfies that, so
+         declaring 1.1 fixes both ends.
+
+         The cost of getting this wrong is not just missing offload: the tethering
+         service blocks in getService() for IOffloadControl and never returns, so
+         it never programs any rules. tetherctrl_nat_POSTROUTING stayed empty and
+         tetherctrl_FORWARD was a bare "-j DROP", which is why clients associated
+         with the hotspot and had no route out. "dumpsys tethering" times out too. -->
     <hal format="hidl">
         <name>android.hardware.tetheroffload.control</name>
         <transport>hwbinder</transport>
-        <version>1.0</version>
+        <version>1.1</version>
         <interface>
             <name>IOffloadControl</name>
             <instance>default</instance>
