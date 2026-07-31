@@ -1,0 +1,19 @@
+//
+// Copyright (C) 2026 The LineageOS Project
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+
+cc_library_shared {
+    name: "libnfc_fmt_compat",
+    srcs: ["nfc_fmt_compat.cpp"],
+    shared_libs: ["liblog"],
+    // The VNDK 30 libbase it forwards to is only copied to /vendor/lib64, and
+    // the sole consumer - vendor.nxp.hardware.nfc@2.0-service - is 64-bit.
+    compile_multilib: "64",
+    vendor: true,
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+}

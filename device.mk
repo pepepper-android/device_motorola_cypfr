@@ -376,7 +376,16 @@ PRODUCT_PACKAGES += \
     android.hardware.nfc@1.2.vendor \
     com.android.nfc_extras \
     libchrome.vendor \
+    libnfc_fmt_compat \
     Tag
+
+# nfc_nci.nqx.default.hw.so still wants fmt::v6::internal::vformat<char>() and
+# the non-template android::base::Trim(), both of which the A15 libbase dropped.
+# libnfc_fmt_compat is LD_PRELOADed into the NFC service (see the setenv in
+# vendor.nxp.hardware.nfc@2.0-service.rc) and forwards those two calls to this
+# private copy of the VNDK 30 libbase, which is the last one that exported them.
+PRODUCT_COPY_FILES += \
+    prebuilts/vndk/v30/arm64/arch-arm64-armv8-a/shared/vndk-sp/libbase.so:$(TARGET_COPY_OUT_VENDOR)/lib64/nfc_compat/libbase.so
 
 # Secure element. The FeliCa applet used by Osaifu-Keitai lives in the eSE, so
 # the SE HAL (reached from apps through OMAPI) and the eSE power manager are
