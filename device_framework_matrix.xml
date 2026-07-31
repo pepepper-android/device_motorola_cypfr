@@ -225,6 +225,26 @@
             <instance>default</instance>
         </interface>
     </hal>
+    <!-- Declared by the VINTF fragment that ships with
+         android.hardware.nfc-service.nxp (hardware/nxp/nfc). A vendor HAL in the
+         device manifest has to be matched by a framework matrix entry or
+         checkvintf fails the build outright:
+
+           ERROR: files are incompatible: The following instances are in the
+           device manifest but not specified in framework compatibility matrix:
+               vendor.nxp.nxpnfc_aidl.INxpNfc/default (@1)
+
+         hardware/qcom-caf/common/vendor_framework_compatibility_matrix.xml has
+         the same entry, but that file is not in our
+         DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE. -->
+    <hal format="aidl" optional="true">
+        <name>vendor.nxp.nxpnfc_aidl</name>
+        <version>1</version>
+        <interface>
+            <name>INxpNfc</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
     <hal format="hidl" optional="true">
         <name>vendor.nxp.nxpnfclegacy</name>
         <version>1.0</version>
