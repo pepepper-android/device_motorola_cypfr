@@ -217,6 +217,16 @@ ro.mot.build.customerid=global
 ro.nfc.port=I2C
 ro.vendor.hw.nfc=ese_nq
 persist.nfc_cfg.config_file_name=libnfc-nci_SN100.conf
+# Read by the HAL (hardware/nxp/nfc), not by libnfc-nci. Without it the AOSP HAL
+# looks for the default "libnfc-nxp.conf", which we do not ship, and falls back
+# to its built-in defaults -- losing Motorola's antenna tuning. The stock blob is
+# Qualcomm's fork and picked the file itself from the mtp/qrd platform plus the
+# chip name, which the AOSP HAL does not do.
+#
+# Of the five SN100 configs in the blobs, libnfc-qrd-* carry no NXP_RF_CONF_BLK
+# entries at all, and libnfc-nxp-pnscr.conf has the same 14 RF blocks as this one
+# but is missing DEFAULT_NFCF_ROUTE -- the NFC-F listen route Osaifu-Keitai needs.
+persist.vendor.nfc.config_file_name=libnfc-mtp-SN100.conf
 
 # Perf
 ro.vendor.extension_library=libqti-perfd-client.so

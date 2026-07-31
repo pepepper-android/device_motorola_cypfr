@@ -364,26 +364,41 @@ PRODUCT_PACKAGES += \
     netutils-wrapper-1.0
 
 # NFC
-# cypfr has an NXP SN100x controller, not an ST21NFC: stock ships only
-# vendor.nxp.hardware.nfc@2.0-service / nfc_nci.nqx.default.hw.so and sets
-# ro.vendor.hw.nfc=ese_nq. The ST HAL that used to be listed here
-# (android.hardware.nfc@1.2-service.st, nfc_nci.st21nfc.default) builds fine
-# from hardware/st/nfc, which is why the mistake was never noticed -- it just
-# cannot drive this hardware. The NXP HAL comes from the vendor blobs instead.
+# cypfr has an NXP SN100x controller, not an ST21NFC. The ST HAL that used to be
+# listed here (android.hardware.nfc@1.2-service.st, nfc_nci.st21nfc.default)
+# builds fine from hardware/st/nfc, which is why the mistake was never noticed --
+# it just cannot drive this hardware.
+#
+# The HAL is built from hardware/nxp/nfc rather than taken from the vendor blobs.
+# That tree is already in the manifest (platform/hardware/nxp/nfc), sits at the
+# same android-15.0.0_r36 tag as the rest of the base, and covers SN1xx/sn100.
+# Building it also gets us off the stock nfc_nci.nqx.default.hw.so, which was
+# compiled against the Android 11 libbase and needs symbols A15 no longer has.
+#
+# android.hardware.nfc-service.nxp is the AIDL 1 service; it pulls in
+# nfc_nci_nxp_snxxx (the HAL itself) and ships its own VINTF fragment, so
+# manifest.xml must NOT declare NFC as well.
+PRODUCT_PACKAGES += \
+    android.hardware.nfc-service.nxp \
+    com.android.nfc_extras \
+    libchrome.vendor \
+    Tag
+
+# Kept only so the stock blob HAL can be brought back on-device without a
+# rebuild: push the manifest/rc changes back and start nqnfc_2_0_hal_service.
+# The blob is still installed but nothing starts it -- see the commented-out
+# triggers in vendor.nxp.hardware.nfc@2.0-service.rc.
+#
+# nfc_nci.nqx.default.hw.so wants fmt::v6::internal::vformat<char>() and the
+# non-template android::base::Trim(), both dropped from the A15 libbase.
+# libnfc_fmt_compat forwards those two calls to this private copy of the VNDK 30
+# libbase, the last one that exported them.
 PRODUCT_PACKAGES += \
     android.hardware.nfc@1.0.vendor \
     android.hardware.nfc@1.1.vendor \
     android.hardware.nfc@1.2.vendor \
-    com.android.nfc_extras \
-    libchrome.vendor \
-    libnfc_fmt_compat \
-    Tag
+    libnfc_fmt_compat
 
-# nfc_nci.nqx.default.hw.so still wants fmt::v6::internal::vformat<char>() and
-# the non-template android::base::Trim(), both of which the A15 libbase dropped.
-# libnfc_fmt_compat is LD_PRELOADed into the NFC service (see the setenv in
-# vendor.nxp.hardware.nfc@2.0-service.rc) and forwards those two calls to this
-# private copy of the VNDK 30 libbase, which is the last one that exported them.
 PRODUCT_COPY_FILES += \
     prebuilts/vndk/v30/arm64/arch-arm64-armv8-a/shared/vndk-sp/libbase.so:$(TARGET_COPY_OUT_VENDOR)/lib64/nfc_compat/libbase.so
 

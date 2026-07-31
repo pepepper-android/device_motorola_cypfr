@@ -84,15 +84,13 @@
             <instance>default</instance>
         </interface>
     </hal>
-    <hal format="hidl">
-        <name>android.hardware.nfc</name>
-        <transport>hwbinder</transport>
-        <version>1.2</version>
-        <interface>
-            <name>INfc</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
+    <!-- NFC is not declared here: android.hardware.nfc-service.nxp is built from
+         hardware/nxp/nfc and ships its own VINTF fragment, which declares both
+         android.hardware.nfc (AIDL 1) and vendor.nxp.nxpnfc_aidl. The HIDL 1.2
+         declaration that used to live here belonged to the stock
+         vendor.nxp.hardware.nfc@2.0-service blob; that blob is still installed
+         as a fallback but is no longer started, so declaring it would leave a
+         declared-but-unimplemented HAL and hang every getService() on it. -->
     <!-- vendor.qti.secure_element@1.2-service registers ISecureElement/eSE1.
          Osaifu-Keitai reaches the FeliCa applet in the eSE through it (OMAPI). -->
     <hal format="hidl">
