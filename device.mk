@@ -183,6 +183,23 @@ PRODUCT_PACKAGES += \
 # Bluetooth
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth/include
 
+# android.hardware.bluetooth@1.0-service-qti is a HIDL server, and nothing builds
+# the interface library for it any more: Android 15 moved Bluetooth to AIDL, so
+# android.hardware.bluetooth@1.0 is no longer part of any product by default.
+# A missing NEEDED fails the whole executable, so the HAL never started at all:
+#
+#   linker: CANNOT LINK EXECUTABLE ".../android.hardware.bluetooth@1.0-service-qti":
+#     library "android.hardware.bluetooth@1.0.so" not found
+#   com.android.bluetooth: Abort message: 'Unable to get a Bluetooth service
+#     after 500ms, start the HAL before starting Bluetooth'
+#
+# hardware/interfaces/bluetooth/1.0 is still in the tree, so build the vendor
+# variant rather than shipping a blob. The QTI libraries the same service needs -
+# btconfigstore@{1.0,2.0} and the @1.0-impl-qti passthrough - are proprietary and
+# come from proprietary-files.txt instead.
+PRODUCT_PACKAGES += \
+    android.hardware.bluetooth@1.0.vendor
+
 # Bluetooth Audio (System-side HAL, sysbta)
 PRODUCT_PACKAGES += \
     audio.sysbta.default \

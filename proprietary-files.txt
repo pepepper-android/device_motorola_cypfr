@@ -517,7 +517,6 @@ vendor/usr/keylayout/uinput-fpc.kl
 vendor/usr/keylayout/uinput-egis.kl
 
 # Firmware
-vendor/firmware/aw882xx_pid_2113_acf.bin
 #vendor/firmware/goodix_firmware.bin
 
 # Audio - sound trigger.
@@ -1117,7 +1116,6 @@ vendor/bin/hw/vendor.qti.media.c2@1.0-service
 vendor/bin/init.qti.media.sh
 vendor/etc/init/init.qti.media.rc
 vendor/etc/init/vendor.qti.media.c2@1.0-service.rc
-vendor/etc/media_holi/video_system_specs.json
 vendor/etc/media_holi/video_system_specs.json
 vendor/etc/seccomp_policy/codec2.vendor.base-arm.policy
 vendor/etc/seccomp_policy/codec2.vendor.ext-arm.policy
@@ -1825,3 +1823,73 @@ vendor/lib64/hw/memtrack.default.so
 # for this model - v7 shipped both, so keep both.
 vendor/firmware/ILITEK_FW_CSOT_7807S
 vendor/firmware/ILITEK_FW_TM_7807S
+
+# Unresolved NEEDED
+# A NEEDED sweep of the built images against the libraries actually installed
+# turned these up. They are why several subsystems never started at all:
+#
+#   android.hardware.bluetooth@1.0-service-qti -> btconfigstore@{1.0,2.0}
+#   libqcrilNr.so                              -> radio.qtiradio@2.7
+#   libdsi_netctrl.so                          -> libnetmgr, libconfigdb
+#   imsdaemon, lib-ims*                        -> the vendor.qti.ims.* set
+#   52 camera and display blobs                -> display.allocator@{3.0,4.0}
+#
+# The linker fails the whole executable on a missing NEEDED, so the Bluetooth
+# HAL never even started ("CANNOT LINK EXECUTABLE"), qcrilNrd likewise, and
+# Bluetooth then aborted with 'Unable to get a Bluetooth service after 500ms'.
+vendor/lib64/libbluetooth_audio_session_qti_2_1.so
+vendor/lib64/libbt-hidlclient.so
+vendor/lib64/libstagefrighthw.so
+vendor/lib64/libtcmd_diag.so
+vendor/lib64/motorola.hardware.health.storage@1.0.so
+vendor/lib64/vendor.qti.hardware.bluetooth_audio@2.0.so
+vendor/lib64/vendor.qti.hardware.btconfigstore@1.0.so
+vendor/lib64/vendor.qti.hardware.btconfigstore@2.0.so
+vendor/lib64/vendor.qti.hardware.capabilityconfigstore@1.0.so
+vendor/lib64/vendor.qti.hardware.display.allocator@3.0.so
+vendor/lib64/vendor.qti.hardware.display.allocator@4.0.so
+vendor/lib64/vendor.qti.hardware.radio.qtiradio@2.7.so
+vendor/lib64/vendor.qti.ims.configservice@1.0.so
+vendor/lib64/vendor.qti.ims.configservice@1.1.so
+vendor/lib64/vendor.qti.ims.connection@1.0.so
+vendor/lib64/vendor.qti.ims.factory@2.0.so
+vendor/lib64/vendor.qti.ims.factory@2.1.so
+vendor/lib64/vendor.qti.ims.factory@2.2.so
+vendor/lib64/vendor.qti.ims.rcssip@1.0.so
+vendor/lib64/vendor.qti.ims.rcssip@1.1.so
+vendor/lib64/vendor.qti.ims.rcssip@1.2.so
+vendor/lib64/vendor.qti.ims.rcsuce@1.0.so
+vendor/lib64/vendor.qti.ims.rcsuce@1.1.so
+vendor/lib64/vendor.qti.ims.rcsuce@1.2.so
+vendor/lib/hw/android.hardware.bluetooth@1.0-impl-qti.so
+vendor/lib/libbluetooth_audio_session_qti_2_1.so
+vendor/lib/libbt-hidlclient.so
+vendor/lib/libconfigdb.so
+vendor/lib/libmdmcutback.so
+vendor/lib/libmdmdetect.so
+vendor/lib/libnetmgr.so
+vendor/lib/libsensorslog.so
+vendor/lib/libsnsapi.so
+vendor/lib/libstagefrighthw.so
+vendor/lib/libtcmd_diag.so
+vendor/lib/motorola.hardware.tcmd@1.0.so
+vendor/lib/vendor.qti.hardware.bluetooth_audio@2.0.so
+vendor/lib/vendor.qti.hardware.btconfigstore@1.0.so
+vendor/lib/vendor.qti.hardware.btconfigstore@2.0.so
+vendor/lib/vendor.qti.hardware.capabilityconfigstore@1.0.so
+vendor/lib/vendor.qti.hardware.display.allocator@3.0.so
+vendor/lib/vendor.qti.hardware.display.allocator@4.0.so
+vendor/lib/vendor.qti.hardware.radio.qtiradio@2.7.so
+vendor/lib/vendor.qti.ims.configservice@1.0.so
+vendor/lib/vendor.qti.ims.configservice@1.1.so
+vendor/lib/vendor.qti.ims.connection@1.0.so
+vendor/lib/vendor.qti.ims.factory@2.0.so
+vendor/lib/vendor.qti.ims.factory@2.1.so
+vendor/lib/vendor.qti.ims.factory@2.2.so
+vendor/lib/vendor.qti.ims.rcssip@1.0.so
+vendor/lib/vendor.qti.ims.rcssip@1.1.so
+vendor/lib/vendor.qti.ims.rcssip@1.2.so
+vendor/lib/vendor.qti.ims.rcsuce@1.0.so
+vendor/lib/vendor.qti.ims.rcsuce@1.1.so
+vendor/lib/vendor.qti.ims.rcsuce@1.2.so
+vendor/lib/vendor.qti.qspmhal@1.0.so
