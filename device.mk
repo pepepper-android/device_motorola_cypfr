@@ -497,7 +497,13 @@ PRODUCT_PACKAGES += \
 PRODUCT_SOONG_NAMESPACES += vendor/qcom/opensource/usb/etc
 
 # Recovery
+# Nothing in the recovery rc files ever sets sys.usb.config, so without this
+# default the "on property:sys.usb.config=adb" triggers never fire: adbd is
+# never started and, worse, the configfs gadget is never bound to the UDC, so
+# the device does not enumerate over USB at all. Android 13 got this for free
+# from build/make; Android 15 no longer sets it anywhere.
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    persist.sys.usb.config=adb \
     ro.recovery.usb.vid=22B8 \
     ro.recovery.usb.adb.pid=2E81 \
     ro.recovery.usb.fastboot.pid=2E81

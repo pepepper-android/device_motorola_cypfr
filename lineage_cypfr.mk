@@ -4,6 +4,12 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+# Recovery has no way to authorise an adb key: /data is not mounted, so adbd
+# finds no adb_keys and the device is stuck "unauthorized" forever. Floko v7
+# built with this set, which is why its recovery adb worked.
+# Must precede the inherits below - vendor/lineage/config/common.mk tests it.
+WITH_ADB_INSECURE := true
+
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
