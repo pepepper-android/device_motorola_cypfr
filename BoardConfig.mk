@@ -240,7 +240,35 @@ ENABLE_VENDOR_RIL_SERVICE := true
 VENDOR_SECURITY_PATCH := 2024-02-01
 
 # SELinux
-include device/qcom/sepolicy/SEPolicy.mk
+# device/qcom/sepolicy is the current-generation policy. holi is a 5.4 UM target
+# (hardware/qcom-caf/common/qcom_defs.mk: UM_5_4_FAMILY := lahaina holi), so the
+# policy matching these blobs is the one device/qcom/sepolicy_vndr/SEPolicy.mk
+# dispatches to, legacy-um.
+#
+# This is not just a question of missing allow rules. firmware_file,
+# bt_firmware_file and fsg_file were not declared at all, and mount(2) returns
+# EINVAL for a context= option naming an unknown type, so /vendor/firmware_mnt,
+# /vendor/bt_firmware and /vendor/fsg never mounted:
+#
+#   __mount(source=...by-name/modem_b,target=/vendor/firmware_mnt,type=ext4)=-1:
+#     Invalid argument ... options: context=u:object_r:firmware_file:s0
+#
+# firmware_class.path points into /vendor/firmware_mnt/image, so no subsystem
+# firmware could be loaded at all - pil_boot failed for ipa_fws, the ADSP never
+# came up, and the GPU never got its zap shader. libEGL_adreno was therefore
+# unusable, SurfaceFlinger fell back to the software EGL and aborted with "no
+# suitable EGLConfig found", and that took system_server and zygote with it.
+#
+# The Motorola directories would come from CommonConfig.mk and PlatformConfig.mk,
+# but nothing includes those - the same gap that leaves platform.mk unreachable -
+# so list them here. fsg_file is declared in common/sepolicy/vendor.
+include device/qcom/sepolicy_vndr/SEPolicy.mk
+
+BOARD_VENDOR_SEPOLICY_DIRS += \
+    device/motorola/common/sepolicy/vendor \
+    device/motorola/common/sepolicy/vendor_qcom \
+    $(PLATFORM_COMMON_PATH)/sepolicy
+
 TARGET_HAS_FUSEBLK_SEPOLICY_ON_VENDOR := true
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
 SELINUX_IGNORE_NEVERALLOWS := true
