@@ -35,19 +35,23 @@
             <instance>legacy/0</instance>
         </interface>
     </hal>
-    <hal format="hidl">
-        <name>android.hardware.drm</name>
-        <transport>hwbinder</transport>
-        <!-- widevine is declared by the blob's own manifest fragment,
-             /vendor/etc/vintf/manifest/manifest_android.hardware.drm@1.3-service.widevine.xml.
-             Declaring it here as well makes checkvintf refuse the whole manifest:
-               HAL "android.hardware.drm" has a conflict: Conflicting FqInstance:
-               @1.3::ICryptoFactory/widevine (from /vendor/etc/vintf/manifest.xml) vs.
-               @1.3::ICryptoFactory/widevine (from .../manifest_android...widevine.xml)
-             wfdhdcp has no fragment of its own, so it stays. -->
-        <fqname>@1.3::ICryptoFactory/wfdhdcp</fqname>
-        <fqname>@1.3::IDrmFactory/wfdhdcp</fqname>
-    </hal>
+    <!-- android.hardware.drm is not declared here at all. widevine comes from the
+         blob's own fragment,
+         /vendor/etc/vintf/manifest/manifest_android.hardware.drm@1.3-service.widevine.xml,
+         and repeating it makes checkvintf refuse the whole manifest:
+           HAL "android.hardware.drm" has a conflict: Conflicting FqInstance:
+           @1.3::ICryptoFactory/widevine (from /vendor/etc/vintf/manifest.xml) vs.
+           @1.3::ICryptoFactory/widevine (from .../manifest_android...widevine.xml)
+
+         The wfdhdcp instances used to be kept here for that reason, but nothing
+         implements them: no binary or library anywhere in the image so much as
+         contains the string "wfdhdcp", and stock ships no service for it either
+         - only the libhdcp*prov libraries. So all they did was make every client
+         lookup fail, 66 times in a twenty-second sample:
+           E init: Could not find 'android.hardware.drm@1.0::IDrmFactory/wfdhdcp'
+                   for ctl.interface_start
+         Declared-with-nothing-behind-it is the same shape that hung the boot on
+         memtrack and on the USB gadget HAL. -->
     <hal format="hidl">
         <name>android.hardware.gatekeeper</name>
         <transport>hwbinder</transport>
