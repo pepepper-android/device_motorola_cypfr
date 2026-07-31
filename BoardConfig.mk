@@ -267,7 +267,8 @@ include device/qcom/sepolicy_vndr/SEPolicy.mk
 BOARD_VENDOR_SEPOLICY_DIRS += \
     device/motorola/common/sepolicy/vendor \
     device/motorola/common/sepolicy/vendor_qcom \
-    $(PLATFORM_COMMON_PATH)/sepolicy
+    $(PLATFORM_COMMON_PATH)/sepolicy \
+    $(DEVICE_PATH)/sepolicy/vendor
 
 TARGET_HAS_FUSEBLK_SEPOLICY_ON_VENDOR := true
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private

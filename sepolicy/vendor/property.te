@@ -1,0 +1,16 @@
+# device/motorola/common/sepolicy/vendor uses vendor_nfc_prop - hal_nfc_default.te
+# reads it, property_contexts labels persist.vendor.nfc. and vendor.nfc.fw_status
+# with it - but only declares it in sepolicy/vendor_mtk/property.te, which is the
+# MediaTek-only directory. CommonConfig.mk picks vendor_mtk or vendor_qcom by
+# platform, so on a Qualcomm device nothing declares it and the policy fails to
+# build:
+#
+#   device/motorola/common/sepolicy/vendor/hal_nfc_default.te:2:ERROR
+#     'unknown type vendor_nfc_prop'
+#
+# Some Qualcomm policies carry their own declaration (sm8550's qva/vendor/common
+# does), but legacy-um, which is what holi uses, does not. Declare it here.
+#
+# Drop this if device/motorola/common ever moves the declaration into the shared
+# vendor directory, or a duplicate declaration will fail the build instead.
+vendor_internal_prop(vendor_nfc_prop);
