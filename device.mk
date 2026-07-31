@@ -100,6 +100,23 @@ PRODUCT_PACKAGES += \
     bootctrl.holi \
     bootctrl.holi.recovery
 
+# USB
+# device/motorola/common/common-treble.mk would provide these, but nothing
+# inherits device/motorola/sm4350-common/platform.mk, so it never took effect and
+# the vendor image shipped with no USB HAL at all. Since Android 12 the gadget
+# HAL is what sets up the configfs gadget, so without it USB never enumerates --
+# no adb, and therefore no logcat from a self-built vendor. The third-party
+# vendor image used until now carried these, which is why adb worked there.
+PRODUCT_PACKAGES += \
+    android.hardware.usb-service.moto-common \
+    android.hardware.usb.gadget-service.moto-common
+
+# Lights
+# Same story: this is the LED HAL, and it writes /sys/class/leds/charging, which
+# is the node this device actually has.
+PRODUCT_PACKAGES += \
+    android.hardware.lights-service.moto
+
 # Update engine
 PRODUCT_PACKAGES += \
     update_engine \
