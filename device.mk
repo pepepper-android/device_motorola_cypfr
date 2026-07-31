@@ -101,15 +101,31 @@ PRODUCT_PACKAGES += \
     bootctrl.holi.recovery
 
 # USB
-# device/motorola/common/common-treble.mk would provide these, but nothing
-# inherits device/motorola/sm4350-common/platform.mk, so it never took effect and
-# the vendor image shipped with no USB HAL at all. Since Android 12 the gadget
-# HAL is what sets up the configfs gadget, so without it USB never enumerates --
-# no adb, and therefore no logcat from a self-built vendor. The third-party
-# vendor image used until now carried these, which is why adb worked there.
+# The gadget HAL is deliberately not here. It was added on the theory that since
+# Android 12 it is what sets up the configfs gadget, so without it USB would
+# never enumerate. That was the wrong diagnosis: what was actually missing was
+# the entire vendor init tree, and init.qcom.usb.rc plus init.mmi.usb.rc build
+# the gadget themselves. adb comes up fine now with no gadget HAL running at all,
+# and v7 never shipped one.
+#
+# Worse, it cannot work as written. UsbGadget::UsbGadget() aborts unless it can
+# access /config/usb_gadget/g1/os_desc/b.1, which is a symlink to configs/b.1,
+# and init.qcom.usb.rc creates that as 0770 root:root while the service runs as
+# user system:
+#
+#   android.hardware.usb.gadget@1.1-service: configfs setup not done yet
+#
+# So it aborted on every start, forever - 74 times in one boot. Because its VINTF
+# fragment still declared android.hardware.usb.gadget@1.1, UsbService blocked in
+# IUsbGadget::getService() and never returned from onBootPhase(BOOT_COMPLETED),
+# so sys.boot_completed was never set, the home activity never launched, and
+# entering the PIN appeared to do nothing.
+#
+# UsbDeviceManager falls back to UsbHandlerLegacy when no gadget HAL is declared
+# (UsbDeviceManager.java, "if (mUsbGadgetHal == null)"), which drives USB through
+# sys.usb.config - exactly what the vendor rc files are written for.
 PRODUCT_PACKAGES += \
-    android.hardware.usb-service.moto-common \
-    android.hardware.usb.gadget-service.moto-common
+    android.hardware.usb-service.moto-common
 
 # Lights
 # Same story: this is the LED HAL, and it writes /sys/class/leds/charging, which
