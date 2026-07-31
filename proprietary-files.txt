@@ -115,11 +115,11 @@ vendor/etc/usb_audio_policy_configuration.xml
 # audio was working: AudioFlinger had an output thread, tracks reached
 # state:started and frames were counted, but the HAL never opened /dev/snd at
 # all. ro.board.platform is "holi", which is how libhardware finds this one.
-vendor/lib/hw/audio.primary.holi.so
+vendor/lib/hw/audio.primary.holi.so:vendor/lib/hw/audio.primary.cypfr.so
 # Its DT_NEEDED. 32-bit is what matters - android.hardware.audio.service is
 # 32-bit - but libtinycompress and libaudio_log_utils have 64-bit users too.
-vendor/lib/libtinycompress.so
-vendor/lib64/libtinycompress.so
+#vendor/lib/libtinycompress.so
+#vendor/lib64/libtinycompress.so
 vendor/lib/libmotaudioutils.so
 vendor/lib/libaudio_log_utils.so
 vendor/lib64/libaudio_log_utils.so
@@ -166,12 +166,12 @@ vendor/lib64/vendor.dolby.hardware.dms@2.0.so
 vendor/etc/dolby/dax-default.xml
 
 # Also missing from soundfx, and also referenced by audio_effects.xml.
-vendor/lib/soundfx/libqcomvisualizer.so
-vendor/lib/soundfx/libqcomvoiceprocessing.so
-vendor/lib/soundfx/libvolumelistener.so
-vendor/lib64/soundfx/libqcomvisualizer.so
-vendor/lib64/soundfx/libqcomvoiceprocessing.so
-vendor/lib64/soundfx/libvolumelistener.so
+#vendor/lib/soundfx/libqcomvisualizer.so
+#vendor/lib/soundfx/libqcomvoiceprocessing.so
+#vendor/lib/soundfx/libvolumelistener.so
+#vendor/lib64/soundfx/libqcomvisualizer.so
+#vendor/lib64/soundfx/libqcomvoiceprocessing.so
+#vendor/lib64/soundfx/libvolumelistener.so
 
 # Bluetooth
 vendor/bin/hw/android.hardware.bluetooth@1.0-service-qti
@@ -1992,7 +1992,7 @@ vendor/lib64/motorola.hardware.health.storage@1.0.so
 vendor/lib64/vendor.qti.hardware.bluetooth_audio@2.0.so
 # libbluetooth_audio_session_qti_2_1.so NEEDs this and it was never taken, so
 # the 2.1 A2DP offload session library could not load at all.
-vendor/lib64/vendor.qti.hardware.bluetooth_audio@2.1.so
+#vendor/lib64/vendor.qti.hardware.bluetooth_audio@2.1.so
 vendor/lib64/vendor.qti.hardware.btconfigstore@1.0.so
 vendor/lib64/vendor.qti.hardware.btconfigstore@2.0.so
 vendor/lib64/vendor.qti.hardware.capabilityconfigstore@1.0.so
@@ -2024,7 +2024,7 @@ vendor/lib/libstagefrighthw.so
 vendor/lib/libtcmd_diag.so
 vendor/lib/motorola.hardware.tcmd@1.0.so
 vendor/lib/vendor.qti.hardware.bluetooth_audio@2.0.so
-vendor/lib/vendor.qti.hardware.bluetooth_audio@2.1.so
+#vendor/lib/vendor.qti.hardware.bluetooth_audio@2.1.so
 vendor/lib/vendor.qti.hardware.btconfigstore@1.0.so
 vendor/lib/vendor.qti.hardware.btconfigstore@2.0.so
 vendor/lib/vendor.qti.hardware.capabilityconfigstore@1.0.so

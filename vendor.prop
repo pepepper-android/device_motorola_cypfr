@@ -213,6 +213,19 @@ media.settings.xml=/vendor/etc/media_profiles_vendor.xml
 # Motorola
 ro.mot.build.customerid=global
 
+# Audio
+# The QTI audio HAL is shipped as a blob, but hardware/qcom-caf/sm8350/audio/hal
+# also defines a module called audio.primary.holi that installs to the same path.
+# A module recipe overrides a PRODUCT_COPY_FILES one, so the build tried to
+# compile it - and it cannot, because it wants kernel headers this device does
+# not produce (TARGET_FORCE_PREBUILT_KERNEL):
+#   ninja: 'out/target/product/cypfr/obj/KERNEL_OBJ/usr', needed by
+#     '.../audio.primary.holi_intermediates/audio_extn/audio_hidl.o', missing
+# So the blob is installed as audio.primary.cypfr.so instead, and named here.
+# libhardware checks ro.hardware.<module> before ro.hardware / ro.board.platform
+# (hardware/libhardware/hardware.c:245), so this wins outright.
+ro.hardware.audio.primary=cypfr
+
 # NFC
 ro.nfc.port=I2C
 ro.vendor.hw.nfc=ese_nq

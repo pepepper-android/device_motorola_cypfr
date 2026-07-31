@@ -120,6 +120,17 @@ PRODUCT_PACKAGES += \
     libsqlite.vendor \
     libsysutils.vendor
 
+# These have in-tree modules that install to the same paths the blobs would, and
+# a module recipe overrides a PRODUCT_COPY_FILES one - the module gets built and
+# the blob is silently ignored. Ask for them explicitly instead of shipping a
+# copy that never lands.
+PRODUCT_PACKAGES += \
+    libqcomvisualizer \
+    libqcomvoiceprocessing \
+    libtinycompress \
+    libvolumelistener \
+    vendor.qti.hardware.bluetooth_audio@2.1.vendor
+
 # libwvhidl.so still wants CBS_init(), which BoringSSL turned into an
 # OPENSSL_INLINE, so it is no longer a symbol in libcrypto and the Widevine DRM
 # service could not link at all. That one symbol is all the process is missing.
