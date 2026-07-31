@@ -33,6 +33,13 @@ on late-fs
     write /dev/kmsg "cypfr: late-fs reached, calling mount_all --late"
     mount_all --late
     write /dev/kmsg "cypfr: mount_all --late returned"
+    # DIAGNOSTIC, remove once /data mounts. The ramoops console is unreliable
+    # here - about 5% of its bytes come back corrupted and after some reboots it
+    # comes back empty - but /metadata is mounted in first stage and can be read
+    # from recovery, so dump the kernel log there while we still can. This has to
+    # happen in late-fs: init.rc's own post-fs-data action reboots at init_user0
+    # before any of ours would run.
+    exec -- /system/bin/sh -c "/system/bin/dmesg > /metadata/cypfr-bootlog.txt; /system/bin/logcat -d -b all > /metadata/cypfr-logcat.txt; sync"
 
 on post-fs-data
     write /dev/kmsg "cypfr: post-fs-data reached"
