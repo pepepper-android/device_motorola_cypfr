@@ -543,6 +543,11 @@ vendor/bin/hw/vendor.nxp.hardware.nfc@2.0-service
 vendor/etc/init/vendor.nxp.hardware.nfc@2.0-service.rc
 vendor/lib64/nfc_nci.nqx.default.hw.so
 vendor/lib64/vendor.nxp.hardware.nfc@2.0.so
+# NFC controller firmware. hardware/nxp/nfc builds FW_LIB_ROOT_DIR "libsn100u_fw"
+# FW_LIB_EXTENSION, i.e. exactly /vendor/lib64/libsn100u_fw.so, and downloads it
+# to the NFCC when the version on the chip does not match. Without it the HAL
+# just skips the download and runs on whatever is already flashed.
+vendor/lib64/libsn100u_fw.so
 
 # Secure element - the FeliCa applet lives in the eSE, so Osaifu-Keitai needs
 # both the SE HAL (OMAPI) and the eSE power manager. libchrome is pulled in by
@@ -553,6 +558,16 @@ vendor/bin/hw/vendor.qti.secure_element@1.2-service
 vendor/etc/init/vendor.qti.esepowermanager@1.1-service.rc
 vendor/etc/init/vendor.qti.secure_element@1.2-service.rc
 vendor/lib64/android.hardware.secure_element@1.0-impl.so
+# vendor.qti.esepowermanager@1.1-service is a passthrough wrapper: it dlopens
+# this and calls HIDL_FETCH_IEsePowerManager. Without it registerAsService()
+# fails and the service aborts on every start, which took the eSE - and with it
+# Osaifu-Keitai - down:
+#   E LegacySupport: Could not get passthrough implementation for
+#     vendor.qti.esepowermanager@1.1::IEsePowerManager/default.
+#   F vendor.qti.esepowermanager@1.1-service: Error while registering
+#     eSE power manager service: 1
+# Only the 64-bit copy is needed; the service is 64-bit.
+vendor/lib64/hw/vendor.qti.esepowermanager@1.1-impl.so
 vendor/lib64/jcos_nq_client.so
 vendor/lib64/ls_nq_client.so
 vendor/lib64/se_nq_extn_client.so
