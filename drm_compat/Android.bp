@@ -1,0 +1,17 @@
+//
+// Copyright (C) 2026 The LineageOS Project
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+
+cc_library_shared {
+    name: "libwv_cbs_compat",
+    srcs: ["wv_cbs_compat.cpp"],
+    // The only consumer, android.hardware.drm@1.3-service.widevine, is 64-bit.
+    compile_multilib: "64",
+    vendor: true,
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+}

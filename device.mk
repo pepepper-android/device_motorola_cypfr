@@ -120,6 +120,12 @@ PRODUCT_PACKAGES += \
     libsqlite.vendor \
     libsysutils.vendor
 
+# libwvhidl.so still wants CBS_init(), which BoringSSL turned into an
+# OPENSSL_INLINE, so it is no longer a symbol in libcrypto and the Widevine DRM
+# service could not link at all. That one symbol is all the process is missing.
+PRODUCT_PACKAGES += \
+    libwv_cbs_compat
+
 # A/B
 PRODUCT_PACKAGES += \
     android.hardware.boot@1.1-impl-qti \
