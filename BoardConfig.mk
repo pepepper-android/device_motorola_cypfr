@@ -226,7 +226,18 @@ TARGET_RECOVERY_FSTAB := $(PLATFORM_COMMON_PATH)/rootdir/fstab_dynamic_system_ex
 ENABLE_VENDOR_RIL_SERVICE := true
 
 # Security
-VENDOR_SECURITY_PATCH := 2023-01-01
+# This is the date the stock vendor image we extract our blobs from declares
+# (S3RYBS32M.168-19-5-7: ro.vendor.build.security_patch=2024-02-01), so it is the
+# honest value. It also has to not go backwards: keymaster records
+# Tag::VENDOR_PATCHLEVEL in every key blob, and UpgradeKeyBlob refuses an upgrade
+# outright - KM_ERROR_INVALID_ARGUMENT - if any version field would decrease
+# (system/keymaster/key_blob_utils/software_keyblobs.cpp, UpgradeIntegerTag).
+#
+# The old 2023-01-01 was older than both the stock image and Floko v7's
+# 2023-04-01, so on a v7 -> v8 upgrade the metadata encryption key could not be
+# upgraded, vold could not decrypt it, /data never mounted, and init rebooted
+# into recovery with --reason=init_user0_failed.
+VENDOR_SECURITY_PATCH := 2024-02-01
 
 # SELinux
 include device/qcom/sepolicy/SEPolicy.mk
