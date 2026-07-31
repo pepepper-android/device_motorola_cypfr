@@ -1893,3 +1893,34 @@ vendor/lib/vendor.qti.ims.rcsuce@1.0.so
 vendor/lib/vendor.qti.ims.rcsuce@1.1.so
 vendor/lib/vendor.qti.ims.rcsuce@1.2.so
 vendor/lib/vendor.qti.qspmhal@1.0.so
+
+# Unresolved NEEDED, second pass
+# wfdservice (Wi-Fi Display) and tcmd (the factory test tool) are installed
+# but were missing the libraries they link against, so neither could start.
+# The wfd ones live on system_ext in the stock image, not vendor.
+system_ext/lib64/libwfdcommonutils.so
+system_ext/lib64/libwfdconfigutils.so
+system_ext/lib64/libwfdservice.so
+system_ext/lib/libwfdcommonutils.so
+system_ext/lib/libwfdconfigutils.so
+system_ext/lib/libwfdservice.so
+vendor/lib64/libtpa.so
+vendor/lib/liblog_vendor.so
+vendor/lib/libpkip.so
+vendor/lib/libstfactory-vendor.so
+vendor/lib/libtpa.so
+
+# Dolby Codec2 service
+# vendor.dolby.media.c2@1.0-service was extracted as a VINTF fragment only -
+# Android.bp installs just the XML - so android.hardware.media.c2@1.0 was
+# declared with nothing behind it and init kept failing to lazy-start it:
+#
+#   Could not find 'android.hardware.media.c2@1.0::IComponentStore/default'
+#     for ctl.interface_start
+#
+# Same shape as the memtrack and usb.gadget hangs. Ship the binary and the
+# three libraries it links against.
+vendor/bin/hw/vendor.dolby.media.c2@1.0-service
+vendor/lib64/libavservices_minijail_vendor.so
+vendor/lib64/libcodec2_hidl@1.1.so
+vendor/lib64/libcodec2_store_dolby.so
