@@ -208,7 +208,6 @@ PRODUCT_PACKAGES += \
     libsdmutils \
     libtinyxml \
     libvulkan \
-    memtrack.default \
     vendor.display.config@1.15 \
     vendor.display.config@1.15.vendor \
     vendor.display.config@2.0 \

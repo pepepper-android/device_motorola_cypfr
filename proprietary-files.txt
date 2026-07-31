@@ -1793,3 +1793,16 @@ vendor/bin/tcmd
 vendor/bin/tcmdhelp
 vendor/bin/vendor_modprobe.sh
 vendor/bin/wdsdaemon
+
+# Memtrack
+# android.hardware.memtrack@1.0-impl is the AOSP passthrough wrapper; the module
+# it hw_get_module()s is proprietary. Without it the service exits, but
+# manifest.xml still declares android.hardware.memtrack@1.0, so hwservicemanager
+# keeps trying to lazy-start it and IMemtrack::getService() never returns. That
+# hangs system_server in startMemtrackProxyService until the watchdog kills it,
+# over and over, which is exactly where the boot animation used to stop.
+# device.mk asked for memtrack.default as a package, but nothing in the tree
+# builds it, so it was silently dropped by ALLOW_MISSING_DEPENDENCIES. v7 shipped
+# these two.
+vendor/lib/hw/memtrack.default.so
+vendor/lib64/hw/memtrack.default.so
