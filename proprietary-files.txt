@@ -1364,8 +1364,11 @@ vendor/lib64/hw/vendor.qti.hardware.alarm@1.0-impl.so
 vendor/lib64/vendor.qti.hardware.alarm@1.0.so
 
 # QCC
-system_ext/bin/qccsyshal@1.1-service
-system_ext/etc/init/vendor.qti.hardware.qccsyshal@1.1-service.rc
+# Not installed: the halimpl needs seven protobuf 3.9-era internal symbols the
+# platform libprotobuf no longer exports, so the service could only crash-loop.
+# See framework_manifest.xml. The libraries are left in place.
+#system_ext/bin/qccsyshal@1.1-service
+#system_ext/etc/init/vendor.qti.hardware.qccsyshal@1.1-service.rc
 system_ext/lib/hw/vendor.qti.hardware.qccsyshal@1.0-impl.so
 system_ext/lib/hw/vendor.qti.hardware.qccsyshal@1.1-impl.so
 system_ext/lib/libqcc_file_agent_sys.so
