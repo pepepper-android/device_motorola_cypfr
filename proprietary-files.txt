@@ -1153,6 +1153,16 @@ vendor/bin/init.qti.media.sh
 vendor/etc/init/init.qti.media.rc
 vendor/etc/init/vendor.qti.media.c2@1.0-service.rc
 vendor/etc/media_holi/video_system_specs.json
+# ro.media.xml_variant.codecs is "_blair" on cypfr, so the codec2 HAL looks for
+# its capability description in media_blair, not media_holi. Without it the
+# hardware component store never came up - it could not describe any component,
+# and only the software one ever registered:
+#   E QC2CompStore: couldn't describe 16386
+#   E QC2V4l2Caps: unsupported c2 format: VENUS_NV12_UBWC for v4l2 format 0x38323151
+#   E QC2V4l2Driver: Invalid device driver fd:-1
+# The two files differ (enc_csc_enable, dec_sec_prefetch_size_output), so the
+# holi one is not a substitute.
+vendor/etc/media_blair/video_system_specs.json
 vendor/etc/seccomp_policy/codec2.vendor.base-arm.policy
 vendor/etc/seccomp_policy/codec2.vendor.ext-arm.policy
 -vendor/etc/vintf/manifest/vendor.dolby.media.c2@1.0-service.xml
