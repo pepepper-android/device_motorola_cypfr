@@ -511,6 +511,27 @@ vendor/bin/fpc_tee_test
 vendor/etc/init/android.hardware.biometrics.fingerprint@2.1-service-fpc2.rc
 vendor/lib64/com.fingerprints.extension@1.0.so
 vendor/lib64/vendor.qti.hardware.fingerprint@1.0.so
+# cypfr is dual-sourced: some units have an FPC sensor, some an Egistec one, and
+# only the FPC half was ever taken. init.oem.fingerprint.overlay.sh probes with
+# fpc_ident and falls back to the Egis driver, then init.oem.fingerprint2.sh
+# starts ets_hal instead of fps_hal - so on an Egis unit the FPC HAL just kept
+# failing in fpc_hal_open with FPC_ERROR_NOT_SUPPORTED out of the TA, and
+# nothing ever registered IBiometricsFingerprint.
+#
+# uinput-egis.idc / uinput-egis.kl and /dev/esfp0's ueventd entry were already
+# here; these are the parts that were missing. Verified on device by installing
+# them by hand: ets_hal registers and the framework's retry loop stops.
+#
+# init.ets.rc is deliberately not taken. It only chmods/chowns
+# /sys/devices/platform/egis_input and /sys/devices/soc/0.et320, neither of
+# which exists on cypfr (the driver creates /sys/class/egis_fp/esfp0), and its
+# only other rule keys off ro.vendor.hw.fps=false, which init.2by2.rc sets to
+# true. 32-bit copies are skipped as well - everything here is 64-bit.
+vendor/bin/hw/android.hardware.biometrics.fingerprint@2.1-service-ets
+vendor/etc/init/android.hardware.biometrics.fingerprint@2.1-service-ets2.rc
+vendor/lib64/libRbsFlow.so
+vendor/lib64/libets_teeclient_v2.so
+vendor/lib64/vendor.egistec.hardware.fingerprint@4.0.so
 vendor/usr/idc/uinput-fpc.idc
 vendor/usr/idc/uinput-egis.idc
 vendor/usr/keylayout/uinput-fpc.kl
