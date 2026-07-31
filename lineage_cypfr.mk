@@ -4,9 +4,22 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-# Recovery has no way to authorise an adb key: /data is not mounted, so adbd
-# finds no adb_keys and the device is stuck "unauthorized" forever. Floko v7
-# built with this set, which is why its recovery adb worked.
+# Recovery has no way to authorise an adb key. It copies /data/misc/adb/adb_keys
+# only if it can mount /data, and it cannot: /data is metadata encrypted and
+# recovery has no key, so with ro.adb.secure=1 recovery adb would sit
+# "unauthorized" forever.
+#
+# Note what this does NOT do. The claim this comment used to make - that Floko v7
+# built with this set, which is why its recovery adb worked - was wrong on both
+# counts: v7's recovery adb never worked, and what actually broke it was the
+# duplicate gadget blocks in init.recovery.usb.rc, since removed.
+#
+# It is also not free: vendor/lineage/config/common.mk turns this into
+# ro.adb.secure=0 through PRODUCT_SYSTEM_DEFAULT_PROPERTIES, so the booted system
+# accepts adb from any host with no authorisation prompt, not just recovery.
+# Keep it while the port is being brought up; drop it if that tradeoff is not
+# wanted, at the cost of recovery adb.
+#
 # Must precede the inherits below - vendor/lineage/config/common.mk tests it.
 WITH_ADB_INSECURE := true
 
