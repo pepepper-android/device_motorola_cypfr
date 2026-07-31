@@ -92,6 +92,34 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/public.libraries.txt:$(TARGET_COPY_OUT_VENDOR)/etc/public.libraries.txt \
     $(LOCAL_PATH)/configs/public.libraries-qti.txt:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/public.libraries-qti.txt
 
+# Libraries the blobs used to get from the VNDK. Stock does not carry any of
+# these under /vendor because on Android 12 they came out of the VNDK APEX;
+# with the VNDK gone in Android 15 a vendor process cannot reach /system/lib64,
+# so the loader simply fails and the process dies before it logs anything of
+# its own. All three are vendor_available in AOSP, so build a vendor copy
+# rather than lifting one out of prebuilts/vndk:
+#
+#   libsqlite   - 17 users, among them libqcrilNr.so. qcrilNrd died on every
+#                 start with "library "libsqlite.so" not found", which is why
+#                 android.hardware.radio never registered and there was no
+#                 mobile data at all:
+#                   E init: process with updatable components 'vendor.qcrild'
+#                           exited 4 times in 4 minutes
+#   libjsoncpp  - libqcodec2_platform.so, i.e. vendor.qti.media.c2@1.0-service.
+#                 Its absence is why nothing ever answered
+#                 android.hardware.media.c2@1.0::IComponentStore/default.
+#   libsysutils - libmdmcutback.so and libmotext_inf.so, 32- and 64-bit.
+#
+# Found by walking every ELF under /vendor and resolving its DT_NEEDED against
+# /vendor plus llndk.libraries.txt - checking against /system as well hides
+# these, because the file is there, just not reachable from the vendor
+# namespace. libandroidicu is the one gap left: it has no vendor variant (it
+# lives in the com.android.i18n APEX) and only tcmd/tcmdhelp want it.
+PRODUCT_PACKAGES += \
+    libjsoncpp.vendor \
+    libsqlite.vendor \
+    libsysutils.vendor
+
 # A/B
 PRODUCT_PACKAGES += \
     android.hardware.boot@1.1-impl-qti \
