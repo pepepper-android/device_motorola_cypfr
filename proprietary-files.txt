@@ -1710,3 +1710,9 @@ vendor/lib/libqsap_sdk.so
 vendor/lib64/libqsap_sdk.so
 vendor/lib/libsynergy_loc_api.so
 vendor/lib64/libsynergy_loc_api.so
+
+# Protobuf (camera.qcom.so の依存)
+vendor/lib/libprotobuf-cpp-full-3.9.1.so
+vendor/lib/libprotobuf-cpp-lite-3.9.1.so
+vendor/lib64/libprotobuf-cpp-full-3.9.1.so
+vendor/lib64/libprotobuf-cpp-lite-3.9.1.so
