@@ -183,6 +183,31 @@
             <instance>default</instance>
         </interface>
     </hal>
+    <!-- The Motorola interface below was declared but the AOSP one it sits next to
+         was not, so android.hardware.biometrics.fingerprint@2.1-service-fpc came
+         up, tried to register, and was turned away:
+
+           hwservicemanager: getTransport: Cannot find entry
+             android.hardware.biometrics.fingerprint@2.1::IBiometricsFingerprint/default
+             in either framework or device VINTF manifest.
+
+         init.oem.fingerprint2.sh waits four seconds for the HAL to set
+         vendor.hw.fingerprint.status, sees it stay unset, concludes it guessed the
+         wrong sensor vendor and swaps to the Egis one - which this build does not
+         ship - then gives up and writes "none" into
+         /mnt/vendor/persist/fps/vendor_id. That is why the sensor looked
+         undetected even though the FPC driver is bound (irq/230-soc:fpc) and the
+         HAL process was running the whole time. Stock declares this at
+         /vendor/etc/vintf/manifest.xml:30. -->
+    <hal format="hidl">
+        <name>android.hardware.biometrics.fingerprint</name>
+        <transport>hwbinder</transport>
+        <version>2.1</version>
+        <interface>
+            <name>IBiometricsFingerprint</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
     <hal format="hidl" override="true">
         <name>com.motorola.hardware.biometric.fingerprint</name>
         <transport>hwbinder</transport>
