@@ -113,10 +113,9 @@
          device/motorola/common/common.mk - which nothing inherits, so it never
          reached the image. Declare it here instead.
 
-         The same fragment also declares vendor.qti.hardware.qteeconnector@1.0 and
-         a SIM1 instance of ISecureElement. Neither is added: no qteeconnector
-         service is built, and whether our secure_element service registers SIM1
-         is unverified. Declaring a HIDL interface with nothing behind it is not
+         The same fragment also declares a SIM1 instance of ISecureElement, which
+         is still not added: whether our secure_element service registers SIM1 is
+         unverified, and declaring a HIDL interface with nothing behind it is not
          harmless - getService() blocks forever on it, which is what left the boot
          hanging on memtrack and on the USB gadget HAL. -->
     <hal format="hidl">
@@ -125,6 +124,30 @@
         <version>1.1</version>
         <interface>
             <name>IEsePowerManager</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <!-- Same per-SKU fragment, and now that the service is actually installed it
+         has to be declared. vendor.qti.secure_element@1.2-service reaches the
+         eSE's GlobalPlatform applets through libGPQTEEC_vendor, which loads its
+         TAs by way of this HAL; without it Osaifu-Keitai got as far as powering
+         the element and then stopped:
+
+           E GPQTEEC: TEEC_QTEE_OpenSession] Loading app - 32552b22-... failed
+           E GPQTEEC: there's no GPAppConnector service alive
+           E GPQeSE-HAL: TEEC_OpenSession() failed : 0xFFFF000E
+
+         device_framework_matrix.xml already carried the matching entry. -->
+    <hal format="hidl">
+        <name>vendor.qti.hardware.qteeconnector</name>
+        <transport>hwbinder</transport>
+        <version>1.0</version>
+        <interface>
+            <name>IAppConnector</name>
+            <instance>default</instance>
+        </interface>
+        <interface>
+            <name>IGPAppConnector</name>
             <instance>default</instance>
         </interface>
     </hal>
