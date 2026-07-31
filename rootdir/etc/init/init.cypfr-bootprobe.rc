@@ -1,0 +1,47 @@
+# Boot stage probe.
+#
+# The device hangs before the boot animation with no adb, no usable recovery
+# adb, and an empty pstore, so there is no way to see how far init gets. The
+# charging LED is the one output channel that needs neither a display, a USB
+# connection nor a mounted /data.
+#
+# Each init stage sets a distinct blink rate. Whatever the LED is doing when
+# the device wedges tells you the last stage that ran:
+#
+#   solid on          early-init   (second-stage init started)
+#   very slow  2s/2s  init
+#   slow       1s/1s  fs           (partitions mounted)
+#   medium   500ms    post-fs      (/system fully up)
+#   fast     200ms    post-fs-data (/data mounted and usable)
+#   very fast 100ms   zygote-start
+#   off               boot         (init finished - problem is above init)
+#
+# Remove this file once the hang is understood.
+
+on early-init
+    write /sys/class/leds/charging/brightness 255
+
+on init
+    write /sys/class/leds/charging/trigger timer
+    write /sys/class/leds/charging/delay_on 2000
+    write /sys/class/leds/charging/delay_off 2000
+
+on fs
+    write /sys/class/leds/charging/delay_on 1000
+    write /sys/class/leds/charging/delay_off 1000
+
+on post-fs
+    write /sys/class/leds/charging/delay_on 500
+    write /sys/class/leds/charging/delay_off 500
+
+on post-fs-data
+    write /sys/class/leds/charging/delay_on 200
+    write /sys/class/leds/charging/delay_off 200
+
+on zygote-start
+    write /sys/class/leds/charging/delay_on 100
+    write /sys/class/leds/charging/delay_off 100
+
+on boot
+    write /sys/class/leds/charging/trigger none
+    write /sys/class/leds/charging/brightness 0
