@@ -95,6 +95,20 @@ vendor/lib64/libaudcal.so
 vendor/lib64/libqtigef.so
 
 # Audio
+# /vendor/etc/audio_policy_configuration.xml is a blob and xi:includes four files.
+# Two of them were never extracted:
+#   href="usb_audio_policy_configuration.xml"       missing
+#   href="r_submix_audio_policy_configuration.xml"  missing
+#   href="audio_policy_volumes.xml"                 present
+#   href="default_volume_tables.xml"                present
+# libxml2 processes xi:include for the whole document, so a missing one takes the
+# volume curves down with it even though they were there - which is how audio
+# ended up playing at a fixed level with the volume keys changing the index and
+# nothing else. a2dp_audio_policy_configuration.xml is not referenced from this
+# file but stock ships it, so take it too.
+vendor/etc/a2dp_audio_policy_configuration.xml
+vendor/etc/r_submix_audio_policy_configuration.xml
+vendor/etc/usb_audio_policy_configuration.xml
 # THE audio HAL. Without it libhardware falls through ro.hardware.audio.primary
 # (unset) and ro.hardware (qcom, no such file) to audio.primary.default.so - the
 # 8KB AOSP stub, which accepts every write and produces silence. It looked like
