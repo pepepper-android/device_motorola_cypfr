@@ -10,6 +10,20 @@ COMMON_PATH := device/motorola/common
 TARGET_SCREEN_HEIGHT := 2400
 TARGET_SCREEN_WIDTH := 1080
 
+# FlokoROM's own animation, carried over from v7 (patch/vendor_addons.diff puts
+# it in vendor/addons, where the rest of the ROM's assets live).
+#
+# TARGET_BOOTANIMATION is crDroid's hook for shipping a finished zip:
+# vendor/lineage/config/BoardConfigSoong.mk exports it as the
+# lineage_bootanimation.prebuilt_file soong config variable and
+# vendor/addons/prebuilt/bootanimation/Android.bp copies it straight through.
+#
+# Going through the generator instead would not work: gen-bootanimation.sh picks
+# bootanimation_1080.tar for a 1080-wide screen and hardcodes a 680x680 desc,
+# while these frames are 1080x1080. Set next to TARGET_SCREEN_* because the same
+# BoardConfigSoong.mk reads all three.
+TARGET_BOOTANIMATION := vendor/addons/prebuilt/bootanimation/floko-bootanimation.zip
+
 # Screen
 TARGET_SCREEN_DENSITY := 420
 
