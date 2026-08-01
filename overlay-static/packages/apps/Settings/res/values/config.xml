@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: 2026 The FlokoROM Project
+     SPDX-License-Identifier: Apache-2.0
+
+     Overlays that have to be compiled into the target APK rather than shipped
+     as a runtime resource overlay. Excluded from PRODUCT_ENFORCE_RRO_TARGETS
+     in device.mk; see the comment there.
+-->
+<resources>
+    <!-- RegulatoryInfoDisplayActivity is declared with
+             android:enabled="@bool/config_show_regulatory_info"
+         and manifest attributes are resolved from the APK's own resources when
+         the package is parsed, so an RRO cannot reach them.
+
+         RegulatoryInfoOverlayCypfr sets this bool and supplies the image, but
+         being an RRO it only takes effect at runtime: the About phone entry
+         appeared (RegulatoryInfoPreferenceController reads the bool live) while
+         the activity itself stayed disabled, so tapping it did nothing.
+
+             am start -a android.settings.SHOW_REGULATORY_INFO
+               Error: Activity class {com.android.settings/...
+               RegulatoryInfoDisplayActivity} does not exist.
+
+         Baking it in here enables the component at parse time. The RRO still
+         provides the drawable. -->
+    <bool name="config_show_regulatory_info">true</bool>
+</resources>

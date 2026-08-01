@@ -68,9 +68,17 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
-    $(LOCAL_PATH)/overlay-lineage
+    $(LOCAL_PATH)/overlay-lineage \
+    $(LOCAL_PATH)/overlay-static
 
 PRODUCT_ENFORCE_RRO_TARGETS := *
+
+# ... except overlay-static, whose resources are read while the target package
+# is being parsed. A runtime resource overlay is applied after that, so values
+# referenced from AndroidManifest.xml -- android:enabled, android:label and
+# friends -- never see it. Those have to be compiled into the APK.
+PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += \
+    $(LOCAL_PATH)/overlay-static
 
 PRODUCT_PACKAGES += \
     FrameworksResCypfr \
