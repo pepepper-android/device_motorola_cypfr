@@ -1,0 +1,99 @@
+From: FlokoROM A15 port <hollyhollyoliveolive@gmail.com>
+Subject: [PATCH] Use sysbta for the split-out A2DP audio client
+
+01-Optionally-use-sysbta-HAL.patch teaches hal_version_manager.cc and
+aidl/client_interface_aidl.h to talk to IBluetoothAudioProviderFactory/sysbta
+instead of /default. Android 15 moved the A2DP client into its own directory,
+aidl/a2dp/, with a private copy of kDefaultAudioProviderFactoryInterface that
+the earlier patch does not reach.
+
+So A2DP alone kept starting its session on the vendor provider while
+audio.sysbta.default.so waited on the sysbta one. The session never matched and
+no A2DP output could be opened -- Bluetooth connected but played no sound:
+
+  BTAudioProviderStub:       startSession - SessionType=A2DP_SOFTWARE_ENCODING_DATAPATH
+                             (pid of android.hardware.audio.service, i.e. /default)
+  BTAudioHalDeviceProxyAIDL: init_session_type: device=0x80,
+                             session_type=A2DP_SOFTWARE_ENCODING_DATAPATH is not ready
+  BTAudioHalStream:          adev_open_output_stream: cannot init HAL
+  APM_AudioPolicyManager:    openOutputWithProfileAndDevice failed to open output -19
+  APM_AudioPolicyManager:    checkOutputsForDevice(): No output available for device 0080
+
+Repeat the selection in the split-out client.
+
+diff --git a/system/audio_hal_interface/aidl/a2dp/client_interface_aidl.cc b/system/audio_hal_interface/aidl/a2dp/client_interface_aidl.cc
+index f022ec3ea2..283beb22fa 100644
+--- a/system/audio_hal_interface/aidl/a2dp/client_interface_aidl.cc
++++ b/system/audio_hal_interface/aidl/a2dp/client_interface_aidl.cc
+@@ -58,7 +58,7 @@ BluetoothAudioClientInterface::~BluetoothAudioClientInterface() {
+ bool BluetoothAudioClientInterface::IsValid() const { return provider_ != nullptr; }
+ 
+ bool BluetoothAudioClientInterface::is_aidl_available() {
+-  return AServiceManager_isDeclared(kDefaultAudioProviderFactoryInterface.c_str());
++  return AServiceManager_isDeclared(audioProviderFactoryInterface().c_str());
+ }
+ 
+ std::vector<AudioCapabilities> BluetoothAudioClientInterface::GetAudioCapabilities() const {
+@@ -72,7 +72,7 @@ std::vector<AudioCapabilities> BluetoothAudioClientInterface::GetAudioCapabiliti
+     return capabilities;
+   }
+   auto provider_factory = IBluetoothAudioProviderFactory::fromBinder(::ndk::SpAIBinder(
+-          AServiceManager_waitForService(kDefaultAudioProviderFactoryInterface.c_str())));
++          AServiceManager_waitForService(audioProviderFactoryInterface().c_str())));
+ 
+   if (provider_factory == nullptr) {
+     log::error("can't get capability from unknown factory");
+@@ -97,7 +97,7 @@ BluetoothAudioClientInterface::GetProviderInfo(
+ 
+   if (provider_factory == nullptr) {
+     provider_factory = IBluetoothAudioProviderFactory::fromBinder(::ndk::SpAIBinder(
+-            AServiceManager_waitForService(kDefaultAudioProviderFactoryInterface.c_str())));
++            AServiceManager_waitForService(audioProviderFactoryInterface().c_str())));
+   }
+ 
+   if (provider_factory == nullptr) {
+@@ -173,7 +173,7 @@ void BluetoothAudioClientInterface::FetchAudioProvider() {
+   // re-registered, so we need to re-fetch the service.
+   for (int retry_no = 0; retry_no < kFetchAudioProviderRetryNumber; ++retry_no) {
+     auto provider_factory = IBluetoothAudioProviderFactory::fromBinder(::ndk::SpAIBinder(
+-            AServiceManager_waitForService(kDefaultAudioProviderFactoryInterface.c_str())));
++            AServiceManager_waitForService(audioProviderFactoryInterface().c_str())));
+ 
+     if (provider_factory == nullptr) {
+       log::error("can't get capability from unknown factory");
+diff --git a/system/audio_hal_interface/aidl/a2dp/client_interface_aidl.h b/system/audio_hal_interface/aidl/a2dp/client_interface_aidl.h
+index a45ff946f2..6bbea04578 100644
+--- a/system/audio_hal_interface/aidl/a2dp/client_interface_aidl.h
++++ b/system/audio_hal_interface/aidl/a2dp/client_interface_aidl.h
+@@ -27,6 +27,7 @@
+ #include "bluetooth_audio_port_impl.h"
+ #include "bta/le_audio/broadcaster/broadcaster_types.h"
+ #include "bta/le_audio/le_audio_types.h"
++#include "osi/include/properties.h"
+ #include "transport_instance.h"
+ 
+ // Keep after audio_aidl_interfaces.h because of <base/logging.h>
+@@ -156,6 +157,23 @@ protected:
+   //     "android.hardware.bluetooth.audio.IBluetoothAudioProviderFactory/default";
+   static inline const std::string kDefaultAudioProviderFactoryInterface =
+           std::string() + IBluetoothAudioProviderFactory::descriptor + "/default";
++  static inline const std::string kSystemAudioProviderFactoryInterface =
++          std::string() + IBluetoothAudioProviderFactory::descriptor + "/sysbta";
++  // sysbta is the system-side generic bluetooth audio implementation. When it is
++  // enabled the stack must talk to that provider instead of the vendor one, which
++  // on this device only offers A2DP offload.
++  //
++  // Android 15 split the A2DP client out of aidl/client_interface_aidl.h into
++  // this file, so the selection has to be repeated here -- otherwise A2DP alone
++  // keeps talking to the vendor provider while the audio side waits on sysbta:
++  //   BTAudioHalDeviceProxyAIDL: init_session_type: device=0x80,
++  //     session_type=A2DP_SOFTWARE_ENCODING_DATAPATH is not ready
++  //   BTAudioHalStream: adev_open_output_stream: cannot init HAL
++  static inline const std::string audioProviderFactoryInterface() {
++    return osi_property_get_bool("persist.bluetooth.system_audio_hal.enabled", false)
++                   ? kSystemAudioProviderFactoryInterface
++                   : kDefaultAudioProviderFactoryInterface;
++  }
+ 
+ private:
+   IBluetoothTransportInstance* transport_;
