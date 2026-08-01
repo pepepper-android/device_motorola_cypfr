@@ -2,7 +2,22 @@
 audio.record.delay=180
 
 # Bluetooth
-persist.bluetooth.system_audio_hal.enabled=1
+# Must be the literal "true", not "1". The audio side reads this with libcutils
+# property_get_bool() (Serializer.cpp), which accepts 1/y/yes/on/true, but the
+# Bluetooth stack reads it with osi_property_get_bool(), which since the move to
+# bluetooth::os::GetSystemProperty() compares the raw string:
+#
+#   system/osi/src/properties.cc
+#     return *result == std::string("true");
+#
+# With "1" the audio policy dropped the a2dp module and injected sysbta while
+# the stack kept talking to IBluetoothAudioProviderFactory/default, so the
+# session never matched and A2DP had no output at all:
+#
+#   BTAudioHalDeviceProxyAIDL: init_session_type: device=0x80, ... is not ready
+#   BTAudioHalStream:          adev_open_output_stream: cannot init HAL
+#   APM_AudioPolicyManager:    checkOutputsForDevice(): No output available for device 0080
+persist.bluetooth.system_audio_hal.enabled=true
 persist.bluetooth.a2dp_offload.disabled=true
 ro.bluetooth.a2dp_offload.supported=false
 
