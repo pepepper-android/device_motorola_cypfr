@@ -169,10 +169,27 @@ BOARD_DTBOIMG_PARTITION_SIZE := 25165824
 BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 100663296
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 102247673856
 
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1073741824
+# Sized to content plus headroom, the way product already was, rather than fixed.
+# The real limit is the group, and there is room to spare in it:
+#
+#   BOARD_MOTOROLA_DYNAMIC_PARTITIONS_SIZE   6304 MB
+#   content today                            3090 MB  (system 979, system_ext 790,
+#                                                       product 576, vendor 745)
+#
+# The fixed caps were inherited from the LineageOS build and crDroid does not fit
+# in them - it ships OmniJaws, OmniStyle, ColumbusService, GameSpace and more in
+# system_ext, which went 22 MB over 768 MB:
+#
+#   __populate_fs: Could not allocate block in ext2 filesystem while writing
+#     file "ThemePicker.apk"
+#   The tree size ... is 818432000 bytes (780 MB) ... max image size ... 755 MB
+#
+# system was at 96% and vendor at 97% of theirs, so raising only system_ext would
+# just have moved the failure one build along.
+BOARD_SYSTEMIMAGE_PARTITION_RESERVED_SIZE := 134217728
 BOARD_PRODUCTIMAGE_PARTITION_RESERVED_SIZE := 1610612736
-BOARD_SYSTEM_EXTIMAGE_PARTITION_SIZE := 805306368
-BOARD_VENDORIMAGE_PARTITION_SIZE := 805306368
+BOARD_SYSTEM_EXTIMAGE_PARTITION_RESERVED_SIZE := 134217728
+BOARD_VENDORIMAGE_PARTITION_RESERVED_SIZE := 134217728
 
 BOARD_BUILD_VENDOR_RAMDISK_IMAGE := true
 
