@@ -186,8 +186,29 @@ BOARD_USERDATAIMAGE_PARTITION_SIZE := 102247673856
 #
 # system was at 96% and vendor at 97% of theirs, so raising only system_ext would
 # just have moved the failure one build along.
+# product carries a bigger reserve than the rest because GApps are flashed on
+# top of the build rather than bundled into it - FlokoROM has never shipped
+# them. MindTheGapps 15 writes about 1050 MB into /product (priv-app is 984 MB
+# of that: GmsCore, Phonesky, Velvet, VelvetTitan...), plus overlay, framework
+# and etc/permissions.
+#
+# Its installer does not check the result of its copies:
+#
+#   cp --preserve=a -r ./* "${SYSTEM_OUT}/"
+#   cp --preserve=a -r ./product/* /product
+#   ...
+#   ui_print "Done!"
+#
+# so a partial install reports success. That is how a flash ended up with
+# /product/app and all of system_ext in place but no /product/priv-app and no
+# privapp-permissions-google-product.xml - and with
+# ro.control_privapp_permissions=enforce, GMS then ran without its privileged
+# permissions and the Play Store was simply absent.
+#
+# 2 GB leaves roughly 1 GB free once GApps are on, while keeping ~720 MB spare
+# in motorola_dynamic_partitions (6308 MB) for the ROM's own growth.
 BOARD_SYSTEMIMAGE_PARTITION_RESERVED_SIZE := 134217728
-BOARD_PRODUCTIMAGE_PARTITION_RESERVED_SIZE := 1610612736
+BOARD_PRODUCTIMAGE_PARTITION_RESERVED_SIZE := 2147483648
 BOARD_SYSTEM_EXTIMAGE_PARTITION_RESERVED_SIZE := 134217728
 BOARD_VENDORIMAGE_PARTITION_RESERVED_SIZE := 134217728
 
