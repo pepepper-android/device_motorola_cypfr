@@ -1,0 +1,85 @@
+# SPDX-FileCopyrightText: 2026 The FlokoROM Project
+# SPDX-License-Identifier: Apache-2.0
+#
+# stock の vendor パーティションが積んでいる precompiled_sepolicy を
+# checkpolicy -b -M -C で CIL に戻し、そこから機械的に書き出したもの。
+# Motorola 自身のポリシーなので、手で書き起こすより取りこぼしが少ない。
+
+
+type mbm_spy, domain;
+type mbm_spy_exec, exec_type, file_type, vendor_file_type;
+
+init_daemon_domain(mbm_spy)
+
+allow mbm_spy binder_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow mbm_spy block_device:dir { search };
+allow mbm_spy bugreport_data_file:file { getattr write };
+allow mbm_spy cgroup:dir { add_name lock open remove_name search write };
+allow mbm_spy cgroup:file { append lock map open write };
+allow mbm_spy cgroup_v2:dir { add_name lock open remove_name search write };
+allow mbm_spy cgroup_v2:file { append lock map open write };
+allow mbm_spy hwbinder_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow mbm_spy mnt_vendor_file:dir { search };
+allow mbm_spy mot_core_property_type:file { getattr map open read };
+allow mbm_spy motobox_exec:file { execute execute_no_trans getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy netutils_wrapper:process { rlimitinh siginh transition };
+allow mbm_spy netutils_wrapper_exec:file { execute getattr map open read };
+allow mbm_spy proc:dir { getattr ioctl lock open read search watch watch_reads };
+allow mbm_spy proc:file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy proc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy proc_bootconfig:dir { getattr ioctl lock open read search watch watch_reads };
+allow mbm_spy proc_bootconfig:file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy proc_bootconfig:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy proc_bootinfo:file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy proc_version:file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy rootfs:lnk_file { getattr };
+allow mbm_spy rtc_device:chr_file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy same_process_hal_file:file { execute getattr map open read };
+allow mbm_spy self:dir { getattr ioctl lock open read search watch watch_reads };
+allow mbm_spy self:fd { use };
+allow mbm_spy self:fifo_file { append getattr ioctl lock map open read watch watch_reads write };
+allow mbm_spy self:file { append getattr ioctl lock map open read watch watch_reads write };
+allow mbm_spy self:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy self:lockdown { confidentiality };
+allow mbm_spy self:process { fork getattr getcap getpgid getsched getsession setcap setpgid setrlimit setsched sigchld sigkill signal signull sigstop };
+allow mbm_spy self:unix_dgram_socket { append bind connect create getattr getopt ioctl lock map read sendto setattr setopt shutdown write };
+allow mbm_spy self:unix_stream_socket { accept append bind connect connectto create getattr getopt ioctl listen lock map read setattr setopt shutdown write };
+allow mbm_spy sysfs_thermal:dir { getattr ioctl lock open read search watch watch_reads };
+allow mbm_spy sysfs_thermal:file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy sysfs_thermal:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy system_file:lnk_file { getattr };
+allow mbm_spy utags_block_device:blk_file { append getattr ioctl lock map open read watch watch_reads write };
+allow mbm_spy vendor_default_prop:file { getattr map open read };
+allow mbm_spy vendor_file_type:dir { getattr ioctl lock open read search watch watch_reads };
+allow mbm_spy vendor_file_type:file { execute getattr map open read };
+allow mbm_spy vendor_file_type:lnk_file { getattr read };
+allow mbm_spy vendor_mot_boot_prop:file { getattr map open read };
+allow mbm_spy vendor_mot_hw_prop:file { getattr map open read };
+allow mbm_spy vendor_mot_unique_id_prop:file { getattr map open read };
+allow mbm_spy vendor_persist_file:dir { getattr ioctl lock open read search watch watch_reads };
+allow mbm_spy vendor_persist_file:lnk_file { read };
+allow mbm_spy vendor_radio_prop:file { getattr map open read };
+allow mbm_spy vendor_sysfs_esoc:dir { getattr ioctl lock open read search watch watch_reads };
+allow mbm_spy vendor_sysfs_esoc:file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy vendor_sysfs_esoc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy vendor_sysfs_gpu_max_clock:file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy vendor_sysfs_graphics:dir { getattr ioctl lock open read search watch watch_reads };
+allow mbm_spy vendor_sysfs_graphics:file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy vendor_sysfs_graphics:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy vendor_sysfs_kgsl:dir { search };
+allow mbm_spy vendor_sysfs_kgsl_gpu_model:file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy vendor_sysfs_kgsl_gpubusy:file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy vendor_sysfs_kgsl_max_gpuclk:file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy vendor_sysfs_public:dir { getattr ioctl lock open read search watch watch_reads };
+allow mbm_spy vendor_sysfs_public:file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy vendor_sysfs_public:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy vendor_sysfs_soc:dir { getattr ioctl lock open read search watch watch_reads };
+allow mbm_spy vendor_sysfs_soc:file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy vendor_sysfs_soc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy vendor_sysfs_ssr:dir { getattr ioctl lock open read search watch watch_reads };
+allow mbm_spy vendor_sysfs_ssr:file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy vendor_sysfs_ssr:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow mbm_spy vendor_unique_id_file:file { getattr ioctl lock map open read watch watch_reads };
+
+type_transition mbm_spy crash_dump_exec:process crash_dump;
+type_transition mbm_spy netutils_wrapper_exec:process netutils_wrapper;

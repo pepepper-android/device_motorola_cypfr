@@ -1,0 +1,101 @@
+# SPDX-FileCopyrightText: 2026 The FlokoROM Project
+# SPDX-License-Identifier: Apache-2.0
+#
+# stock の vendor パーティションが積んでいる precompiled_sepolicy を
+# checkpolicy -b -M -C で CIL に戻し、そこから機械的に書き出したもの。
+# Motorola 自身のポリシーなので、手で書き起こすより取りこぼしが少ない。
+
+
+type aplogd, domain;
+type aplogd_exec, exec_type, file_type, vendor_file_type;
+
+init_daemon_domain(aplogd)
+
+allow aplogd aplog_data_file:dir { add_name create getattr ioctl lock open read remove_name rename reparent rmdir search setattr watch watch_reads write };
+allow aplogd aplog_data_file:file { append create getattr ioctl lock map open read rename setattr unlink watch watch_reads write };
+allow aplogd aplog_data_file:lnk_file { append create getattr ioctl lock map open read rename setattr unlink watch watch_reads write };
+allow aplogd binder_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow aplogd bugreport_data_file:file { getattr write };
+allow aplogd cgroup:dir { add_name lock open remove_name search write };
+allow aplogd cgroup:file { append lock map open write };
+allow aplogd cgroup_v2:dir { add_name lock open remove_name search write };
+allow aplogd cgroup_v2:file { append lock map open write };
+allow aplogd hwbinder_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow aplogd init:unix_stream_socket { connectto };
+allow aplogd kernel:system { syslog_mod };
+allow aplogd log_prop:file { getattr map open read };
+allow aplogd log_prop:property_service { set };
+allow aplogd logd:unix_stream_socket { connectto };
+allow aplogd logd_socket:sock_file { write };
+allow aplogd logdr_socket:sock_file { write };
+allow aplogd mnt_user_file:dir { search };
+allow aplogd mnt_vendor_file:dir { search };
+allow aplogd motobox_exec:file { execute execute_no_trans getattr ioctl lock map open read watch watch_reads };
+allow aplogd netutils_wrapper:process { rlimitinh siginh transition };
+allow aplogd netutils_wrapper_exec:file { execute getattr map open read };
+allow aplogd proc:dir { getattr ioctl lock open read search watch watch_reads };
+allow aplogd proc:file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd proc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd proc_bootconfig:dir { getattr ioctl lock open read search watch watch_reads };
+allow aplogd proc_bootconfig:file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd proc_bootconfig:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd proc_bootinfo:file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd property_socket:sock_file { write };
+allow aplogd rootfs:lnk_file { getattr };
+allow aplogd same_process_hal_file:file { execute getattr map open read };
+allow aplogd sdcard_type:dir { add_name create getattr ioctl lock open read remove_name rename reparent rmdir search setattr watch watch_reads write };
+allow aplogd sdcard_type:file { append create getattr ioctl lock map open read rename setattr unlink watch watch_reads write };
+allow aplogd self:capability { setgid setuid };
+allow aplogd self:capability2 { syslog };
+allow aplogd self:dir { getattr ioctl lock open read search watch watch_reads };
+allow aplogd self:fd { use };
+allow aplogd self:fifo_file { append getattr ioctl lock map open read watch watch_reads write };
+allow aplogd self:file { append getattr ioctl lock map open read watch watch_reads write };
+allow aplogd self:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd self:lockdown { confidentiality };
+allow aplogd self:process { fork getattr getcap getpgid getsched getsession setcap setpgid setrlimit setsched sigchld sigkill signal signull sigstop };
+allow aplogd self:unix_dgram_socket { append bind connect create getattr getopt ioctl lock map read sendto setattr setopt shutdown write };
+allow aplogd self:unix_stream_socket { accept append bind connect connectto create getattr getopt ioctl listen lock map read setattr setopt shutdown write };
+allow aplogd storage_file:dir { add_name create getattr ioctl lock open read remove_name rename reparent rmdir search setattr watch watch_reads write };
+allow aplogd storage_file:file { append create getattr ioctl lock map open read rename setattr unlink watch watch_reads write };
+allow aplogd sysfs_thermal:dir { getattr ioctl lock open read search watch watch_reads };
+allow aplogd sysfs_thermal:file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd sysfs_thermal:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd system_file:lnk_file { getattr };
+allow aplogd vendor_default_prop:file { getattr map open read };
+allow aplogd vendor_dropbox_data_file:dir { add_name lock open remove_name search write };
+allow aplogd vendor_dropbox_data_file:file { append create getattr ioctl lock map open read rename setattr unlink watch watch_reads write };
+allow aplogd vendor_file_type:dir { getattr ioctl lock open read search watch watch_reads };
+allow aplogd vendor_file_type:file { execute getattr map open read };
+allow aplogd vendor_file_type:lnk_file { getattr read };
+allow aplogd vendor_mot_aplogd_prop:file { getattr map open read };
+allow aplogd vendor_mot_aplogd_prop:property_service { set };
+allow aplogd vendor_mot_boot_prop:file { getattr map open read };
+allow aplogd vendor_mot_hw_prop:file { getattr map open read };
+allow aplogd vendor_mot_unique_id_prop:file { getattr map open read };
+allow aplogd vendor_persist_file:dir { getattr ioctl lock open read search watch watch_reads };
+allow aplogd vendor_persist_file:lnk_file { read };
+allow aplogd vendor_sysfs_esoc:dir { getattr ioctl lock open read search watch watch_reads };
+allow aplogd vendor_sysfs_esoc:file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd vendor_sysfs_esoc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd vendor_sysfs_gpu_max_clock:file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd vendor_sysfs_graphics:dir { getattr ioctl lock open read search watch watch_reads };
+allow aplogd vendor_sysfs_graphics:file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd vendor_sysfs_graphics:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd vendor_sysfs_kgsl:dir { search };
+allow aplogd vendor_sysfs_kgsl_gpu_model:file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd vendor_sysfs_kgsl_gpubusy:file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd vendor_sysfs_kgsl_max_gpuclk:file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd vendor_sysfs_public:dir { getattr ioctl lock open read search watch watch_reads };
+allow aplogd vendor_sysfs_public:file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd vendor_sysfs_public:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd vendor_sysfs_soc:dir { getattr ioctl lock open read search watch watch_reads };
+allow aplogd vendor_sysfs_soc:file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd vendor_sysfs_soc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd vendor_sysfs_ssr:dir { getattr ioctl lock open read search watch watch_reads };
+allow aplogd vendor_sysfs_ssr:file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd vendor_sysfs_ssr:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow aplogd vendor_unique_id_file:file { getattr ioctl lock map open read watch watch_reads };
+
+type_transition aplogd crash_dump_exec:process crash_dump;
+type_transition aplogd netutils_wrapper_exec:process netutils_wrapper;

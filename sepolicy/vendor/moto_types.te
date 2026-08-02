@@ -1,0 +1,102 @@
+# SPDX-FileCopyrightText: 2026 The FlokoROM Project
+# SPDX-License-Identifier: Apache-2.0
+#
+# stock の vendor パーティションが積んでいる precompiled_sepolicy を
+# checkpolicy -b -M -C で CIL に戻し、そこから機械的に書き出したもの。
+# Motorola 自身のポリシーなので、手で書き起こすより取りこぼしが少ない。
+
+# Motorola 独自デーモンが参照する型のうち、A15 の
+# ポリシーに存在しないもの。
+
+type adspd, domain, mlstrustedsubject;
+type adspd_socket, file_type, mlstrustedobject;
+type aplog_data_file, data_file_type, file_type;
+type bllogs_block_device, dev_type;
+type bugreport_data_file, data_file_type, file_type, mlstrustedobject;
+type chargeonly_data_file, data_file_type, file_type;
+type cid_block_device, dev_type;
+type clogo_block_device, dev_type;
+type dbvc_data_file, data_file_type, file_type;
+type etsd_device, dev_type;
+type hob_device, dev_type;
+type hwrev_data_file, data_file_type, file_type, mlstrustedobject;
+type i2c_device, dev_type;
+type kpan_block_device, dev_type;
+type kpgather, domain;
+type localtcmd_socket, file_type;
+type mdlog_data_file, data_file_type, file_type, mlstrustedobject;
+type mdlog_socket, file_type;
+type memtest, domain;
+type modem_hob_block_device, dev_type;
+type panic_data_file, data_file_type, file_type;
+type pds_att_omadm_file, file_type, mlstrustedobject;
+type pds_batt_file, file_type;
+type pds_hiddenmenu_file, file_type, mlstrustedobject;
+type pds_oma_file, file_type, mlstrustedobject;
+type pds_omadm_file, file_type;
+type pds_public_file, file_type;
+type pds_usc_dm_file, file_type;
+type persist_camera_dualcal_file, file_type, vendor_persist_type;
+type persist_chargeonly_file, file_type;
+type persist_factory_file, file_type;
+type persist_fps_file, file_type, vendor_persist_type;
+type proc_bootinfo, fs_type, proc_type;
+type proc_hwconf, fs_type, proc_type;
+type psylogs_block_device, dev_type;
+type sensor_hub, domain;
+type shwi_device, dev_type;
+type sns_mot_client, domain;
+type sysfs_batt, fs_type, sysfs_type;
+type sysfs_capsense, fs_type, sysfs_type;
+type sysfs_cnss, fs_type, sysfs_type;
+type sysfs_dt_chosen, fs_type, sysfs_type;
+type sysfs_fpc, fs_type, sysfs_type;
+type sysfs_hwmon, fs_type, sysfs_type;
+type sysfs_muc_uart, fs_type, mlstrustedobject, sysfs_type;
+type sysfs_panel_vendor_info, fs_type, sysfs_type;
+type sysfs_touchclass, fs_type, sysfs_type;
+type tcmdhelp_socket, file_type;
+type tpapi_tmp, file_type;
+type utags_block_device, dev_type;
+type vendor_dropbox_data_file, data_file_type, file_type;
+type vendor_factory_tmp_file, file_type;
+type vendor_hal_fingerprint_fpc, domain, hal_fingerprint_server, halserverdomain;
+type vendor_memtest_data_file, data_file_type, file_type;
+type vendor_qdss_device, dev_type;
+type vendor_unique_id_file, fs_type, sysfs_type;
+
+# Motorola 独自 prop
+vendor_restricted_prop(vendor_hw_gabutton_prop);
+vendor_restricted_prop(vendor_mot_aplogd_prop);
+vendor_restricted_prop(vendor_mot_boot_prop);
+vendor_restricted_prop(vendor_mot_ctl_ftmipcd_prop);
+vendor_internal_prop(vendor_mot_ctl_mdlog_prop);
+vendor_internal_prop(vendor_mot_ctl_stop_mdlog_prop);
+vendor_restricted_prop(vendor_mot_factory_prop);
+vendor_restricted_prop(vendor_mot_fingerprint_prop);
+vendor_internal_prop(vendor_mot_hw_boardversion_prop);
+vendor_restricted_prop(vendor_mot_hw_prop);
+vendor_restricted_prop(vendor_mot_init_prop);
+vendor_restricted_prop(vendor_mot_mdlog_prop);
+vendor_restricted_prop(vendor_mot_nfc_prop);
+vendor_restricted_prop(vendor_mot_product_prop);
+vendor_restricted_prop(vendor_mot_reboot_prop);
+vendor_restricted_prop(vendor_mot_tcmd_prop);
+vendor_restricted_prop(vendor_mot_touchscreen_prop);
+vendor_restricted_prop(vendor_mot_unique_id_prop);
+vendor_restricted_prop(vendor_mot_var_prop);
+
+# stock では Motorola 独自 prop をまとめる attribute。mbm_spy が
+# これ一つで全部読む。我々が積む機種に無い prop は落としてある。
+attribute mot_core_property_type;
+typeattribute vendor_hw_gabutton_prop mot_core_property_type;
+typeattribute vendor_mot_aplogd_prop mot_core_property_type;
+typeattribute vendor_mot_boot_prop mot_core_property_type;
+typeattribute vendor_mot_ctl_ftmipcd_prop mot_core_property_type;
+typeattribute vendor_mot_factory_prop mot_core_property_type;
+typeattribute vendor_mot_fingerprint_prop mot_core_property_type;
+typeattribute vendor_mot_hw_prop mot_core_property_type;
+typeattribute vendor_mot_init_prop mot_core_property_type;
+typeattribute vendor_mot_reboot_prop mot_core_property_type;
+typeattribute vendor_mot_tcmd_prop mot_core_property_type;
+typeattribute vendor_mot_touchscreen_prop mot_core_property_type;

@@ -1,0 +1,92 @@
+# SPDX-FileCopyrightText: 2026 The FlokoROM Project
+# SPDX-License-Identifier: Apache-2.0
+#
+# stock の vendor パーティションが積んでいる precompiled_sepolicy を
+# checkpolicy -b -M -C で CIL に戻し、そこから機械的に書き出したもの。
+# Motorola 自身のポリシーなので、手で書き起こすより取りこぼしが少ない。
+
+
+type init_usb, domain;
+type init_usb_exec, exec_type, file_type, vendor_file_type;
+
+init_daemon_domain(init_usb)
+
+allow init_usb binder_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow init_usb bugreport_data_file:file { getattr write };
+allow init_usb cgroup:dir { add_name lock open remove_name search write };
+allow init_usb cgroup:file { append lock map open write };
+allow init_usb cgroup_v2:dir { add_name lock open remove_name search write };
+allow init_usb cgroup_v2:file { append lock map open write };
+allow init_usb configfs:dir { search };
+allow init_usb configfs:file { append lock map open write };
+allow init_usb hwbinder_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow init_usb init:unix_stream_socket { connectto };
+allow init_usb kmsg_device:chr_file { append lock map open write };
+allow init_usb mnt_vendor_file:dir { search };
+allow init_usb motobox_exec:file { execute execute_no_trans getattr ioctl lock map open read watch watch_reads };
+allow init_usb netutils_wrapper:process { rlimitinh siginh transition };
+allow init_usb netutils_wrapper_exec:file { execute getattr map open read };
+allow init_usb property_socket:sock_file { write };
+allow init_usb rootfs:lnk_file { getattr };
+allow init_usb same_process_hal_file:file { execute getattr map open read };
+allow init_usb self:capability { chown fowner };
+allow init_usb self:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_usb self:fd { use };
+allow init_usb self:fifo_file { append getattr ioctl lock map open read watch watch_reads write };
+allow init_usb self:file { append getattr ioctl lock map open read watch watch_reads write };
+allow init_usb self:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb self:lockdown { confidentiality };
+allow init_usb self:process { fork getattr getcap getpgid getsched getsession setcap setpgid setrlimit setsched sigchld sigkill signal signull sigstop };
+allow init_usb self:unix_dgram_socket { append bind connect create getattr getopt ioctl lock map read sendto setattr setopt shutdown write };
+allow init_usb self:unix_stream_socket { accept append bind connect connectto create getattr getopt ioctl listen lock map read setattr setopt shutdown write };
+allow init_usb sysfs:file { append lock map open setattr write };
+allow init_usb sysfs_android_usb:dir { search };
+allow init_usb sysfs_android_usb:file { append lock map open write };
+allow init_usb sysfs_fs_incfs_features:file { append lock map open setattr write };
+allow init_usb sysfs_fs_incfs_metrics:file { append lock map open setattr write };
+allow init_usb sysfs_thermal:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_usb sysfs_thermal:file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb sysfs_thermal:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb system_file:lnk_file { getattr };
+allow init_usb vendor_default_prop:file { getattr map open read };
+allow init_usb vendor_file_type:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_usb vendor_file_type:file { execute getattr map open read };
+allow init_usb vendor_file_type:lnk_file { getattr read };
+allow init_usb vendor_mot_boot_prop:file { getattr map open read };
+allow init_usb vendor_mot_factory_prop:file { getattr map open read };
+allow init_usb vendor_mot_factory_prop:property_service { set };
+allow init_usb vendor_mot_hw_prop:file { getattr map open read };
+allow init_usb vendor_mot_init_prop:file { getattr map open read };
+allow init_usb vendor_mot_tcmd_prop:file { getattr map open read };
+allow init_usb vendor_mot_unique_id_prop:file { getattr map open read };
+allow init_usb vendor_persist_file:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_usb vendor_persist_file:lnk_file { read };
+allow init_usb vendor_radio_prop:file { getattr map open read };
+allow init_usb vendor_shell_exec:file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_sysfs_esoc:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_usb vendor_sysfs_esoc:file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_sysfs_esoc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_sysfs_gpu_max_clock:file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_sysfs_graphics:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_usb vendor_sysfs_graphics:file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_sysfs_graphics:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_sysfs_kgsl:dir { search };
+allow init_usb vendor_sysfs_kgsl_gpu_model:file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_sysfs_kgsl_gpubusy:file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_sysfs_kgsl_max_gpuclk:file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_sysfs_public:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_usb vendor_sysfs_public:file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_sysfs_public:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_sysfs_soc:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_usb vendor_sysfs_soc:file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_sysfs_soc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_sysfs_ssr:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_usb vendor_sysfs_ssr:file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_sysfs_ssr:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_toolbox_exec:file { execute execute_no_trans getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_unique_id_file:file { getattr ioctl lock map open read watch watch_reads };
+allow init_usb vendor_usb_prop:file { getattr map open read };
+allow init_usb vendor_usb_prop:property_service { set };
+
+type_transition init_usb crash_dump_exec:process crash_dump;
+type_transition init_usb netutils_wrapper_exec:process netutils_wrapper;

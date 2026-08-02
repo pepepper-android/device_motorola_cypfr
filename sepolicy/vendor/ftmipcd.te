@@ -1,0 +1,88 @@
+# SPDX-FileCopyrightText: 2026 The FlokoROM Project
+# SPDX-License-Identifier: Apache-2.0
+#
+# stock の vendor パーティションが積んでいる precompiled_sepolicy を
+# checkpolicy -b -M -C で CIL に戻し、そこから機械的に書き出したもの。
+# Motorola 自身のポリシーなので、手で書き起こすより取りこぼしが少ない。
+
+
+type ftmipcd, domain, netdomain;
+type ftmipcd_exec, exec_type, file_type, vendor_file_type;
+
+init_daemon_domain(ftmipcd)
+
+allow ftmipcd binder_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow ftmipcd bugreport_data_file:file { getattr write };
+allow ftmipcd cgroup:dir { add_name lock open remove_name search write };
+allow ftmipcd cgroup:file { append lock map open write };
+allow ftmipcd cgroup_v2:dir { add_name lock open remove_name search write };
+allow ftmipcd cgroup_v2:file { append lock map open write };
+allow ftmipcd hwbinder_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow ftmipcd mnt_vendor_file:dir { search };
+allow ftmipcd motobox_exec:file { execute execute_no_trans getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd netutils_wrapper:process { rlimitinh siginh transition };
+allow ftmipcd netutils_wrapper_exec:file { execute getattr map open read };
+allow ftmipcd node_type:icmp_socket { node_bind };
+allow ftmipcd node_type:rawip_socket { node_bind };
+allow ftmipcd node_type:tcp_socket { node_bind };
+allow ftmipcd node_type:udp_socket { node_bind };
+allow ftmipcd port_type:tcp_socket { name_bind };
+allow ftmipcd port_type:udp_socket { name_bind };
+allow ftmipcd rootfs:lnk_file { getattr };
+allow ftmipcd same_process_hal_file:file { execute getattr map open read };
+allow ftmipcd self:capability { net_raw };
+allow ftmipcd self:dir { getattr ioctl lock open read search watch watch_reads };
+allow ftmipcd self:fd { use };
+allow ftmipcd self:fifo_file { append getattr ioctl lock map open read watch watch_reads write };
+allow ftmipcd self:file { append getattr ioctl lock map open read watch watch_reads write };
+allow ftmipcd self:icmp_socket { append bind connect create getattr getopt ioctl lock map read setattr setopt shutdown write };
+allow ftmipcd self:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd self:lockdown { confidentiality };
+allow ftmipcd self:netlink_kobject_uevent_socket { append bind connect create getattr getopt lock map read setattr setopt shutdown write };
+allow ftmipcd self:netlink_route_socket { append bind connect create getattr getopt lock nlmsg_read nlmsg_readpriv read setattr setopt shutdown write };
+allow ftmipcd self:netlink_socket { append bind connect create getattr getopt lock map read setattr setopt shutdown write };
+allow ftmipcd self:process { fork getattr getcap getpgid getsched getsession setcap setpgid setrlimit setsched sigchld sigkill signal signull sigstop };
+allow ftmipcd self:rawip_socket { append bind connect create getattr getopt ioctl lock map read setattr setopt shutdown write };
+allow ftmipcd self:tcp_socket { accept append bind connect create getattr getopt ioctl listen lock map read setattr setopt shutdown write };
+allow ftmipcd self:udp_socket { append bind connect create getattr getopt ioctl lock map read setattr setopt shutdown write };
+allow ftmipcd self:unix_dgram_socket { append bind connect create getattr getopt ioctl lock map read sendto setattr setopt shutdown write };
+allow ftmipcd self:unix_stream_socket { accept append bind connect connectto create getattr getopt ioctl listen lock map read setattr setopt shutdown write };
+allow ftmipcd sysfs_thermal:dir { getattr ioctl lock open read search watch watch_reads };
+allow ftmipcd sysfs_thermal:file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd sysfs_thermal:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd system_file:lnk_file { getattr };
+allow ftmipcd vendor_default_prop:file { getattr map open read };
+allow ftmipcd vendor_diag-router:unix_stream_socket { connectto };
+allow ftmipcd vendor_diag_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow ftmipcd vendor_file_type:dir { getattr ioctl lock open read search watch watch_reads };
+allow ftmipcd vendor_file_type:file { execute getattr map open read };
+allow ftmipcd vendor_file_type:lnk_file { getattr read };
+allow ftmipcd vendor_mot_boot_prop:file { getattr map open read };
+allow ftmipcd vendor_mot_hw_prop:file { getattr map open read };
+allow ftmipcd vendor_mot_unique_id_prop:file { getattr map open read };
+allow ftmipcd vendor_persist_file:dir { getattr ioctl lock open read search watch watch_reads };
+allow ftmipcd vendor_persist_file:lnk_file { read };
+allow ftmipcd vendor_sysfs_esoc:dir { getattr ioctl lock open read search watch watch_reads };
+allow ftmipcd vendor_sysfs_esoc:file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd vendor_sysfs_esoc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd vendor_sysfs_gpu_max_clock:file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd vendor_sysfs_graphics:dir { getattr ioctl lock open read search watch watch_reads };
+allow ftmipcd vendor_sysfs_graphics:file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd vendor_sysfs_graphics:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd vendor_sysfs_kgsl:dir { search };
+allow ftmipcd vendor_sysfs_kgsl_gpu_model:file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd vendor_sysfs_kgsl_gpubusy:file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd vendor_sysfs_kgsl_max_gpuclk:file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd vendor_sysfs_public:dir { getattr ioctl lock open read search watch watch_reads };
+allow ftmipcd vendor_sysfs_public:file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd vendor_sysfs_public:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd vendor_sysfs_soc:dir { getattr ioctl lock open read search watch watch_reads };
+allow ftmipcd vendor_sysfs_soc:file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd vendor_sysfs_soc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd vendor_sysfs_ssr:dir { getattr ioctl lock open read search watch watch_reads };
+allow ftmipcd vendor_sysfs_ssr:file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd vendor_sysfs_ssr:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow ftmipcd vendor_unique_id_file:file { getattr ioctl lock map open read watch watch_reads };
+
+type_transition ftmipcd crash_dump_exec:process crash_dump;
+type_transition ftmipcd netutils_wrapper_exec:process netutils_wrapper;

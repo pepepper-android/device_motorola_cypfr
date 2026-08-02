@@ -1,0 +1,105 @@
+# SPDX-FileCopyrightText: 2026 The FlokoROM Project
+# SPDX-License-Identifier: Apache-2.0
+#
+# stock の vendor パーティションが積んでいる precompiled_sepolicy を
+# checkpolicy -b -M -C で CIL に戻し、そこから機械的に書き出したもの。
+# Motorola 自身のポリシーなので、手で書き起こすより取りこぼしが少ない。
+
+
+type batt_health, domain;
+type batt_health_exec, exec_type, file_type, vendor_file_type;
+
+init_daemon_domain(batt_health)
+
+allow batt_health aplog_data_file:dir { add_name getattr ioctl lock open read remove_name search watch watch_reads write };
+allow batt_health aplog_data_file:file { append create getattr ioctl lock map open read rename setattr unlink watch watch_reads write };
+allow batt_health binder_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow batt_health block_device:dir { search };
+allow batt_health bugreport_data_file:file { getattr write };
+allow batt_health cgroup:dir { add_name lock open remove_name search write };
+allow batt_health cgroup:file { append lock map open write };
+allow batt_health cgroup_v2:dir { add_name lock open remove_name search write };
+allow batt_health cgroup_v2:file { append lock map open write };
+allow batt_health hwbinder_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow batt_health mnt_vendor_file:dir { search };
+allow batt_health mnt_vendor_file:lnk_file { read };
+allow batt_health motobox_exec:file { execute execute_no_trans getattr ioctl lock map open read watch watch_reads };
+allow batt_health netutils_wrapper:process { rlimitinh siginh transition };
+allow batt_health netutils_wrapper_exec:file { execute getattr map open read };
+allow batt_health pds_batt_file:dir { add_name getattr ioctl lock open read remove_name search watch watch_reads write };
+allow batt_health pds_batt_file:file { append create getattr ioctl lock map open read rename setattr unlink watch watch_reads write };
+allow batt_health psylogs_block_device:blk_file { append getattr ioctl lock map open read watch watch_reads write };
+allow batt_health rootfs:lnk_file { getattr };
+allow batt_health same_process_hal_file:file { execute getattr map open read };
+allow batt_health self:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health self:fd { use };
+allow batt_health self:fifo_file { append getattr ioctl lock map open read watch watch_reads write };
+allow batt_health self:file { append getattr ioctl lock map open read watch watch_reads write };
+allow batt_health self:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health self:lockdown { confidentiality };
+allow batt_health self:netlink_kobject_uevent_socket { append bind connect create getattr getopt lock map read setattr setopt shutdown write };
+allow batt_health self:process { fork getattr getcap getpgid getsched getsession setcap setpgid setrlimit setsched sigchld sigkill signal signull sigstop };
+allow batt_health self:unix_dgram_socket { append bind connect create getattr getopt ioctl lock map read sendto setattr setopt shutdown write };
+allow batt_health self:unix_stream_socket { accept append bind connect connectto create getattr getopt ioctl listen lock map read setattr setopt shutdown write };
+allow batt_health sysfs:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health sysfs:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health sysfs:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health sysfs_batt:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health sysfs_batt:file { append getattr ioctl lock map open read watch watch_reads write };
+allow batt_health sysfs_batt:lnk_file { append getattr ioctl lock map open read watch watch_reads write };
+allow batt_health sysfs_batteryinfo:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health sysfs_batteryinfo:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health sysfs_batteryinfo:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health sysfs_fs_incfs_features:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health sysfs_fs_incfs_features:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health sysfs_fs_incfs_features:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health sysfs_fs_incfs_metrics:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health sysfs_fs_incfs_metrics:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health sysfs_fs_incfs_metrics:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health sysfs_muc_uart:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health sysfs_muc_uart:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health sysfs_thermal:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health sysfs_thermal:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health sysfs_thermal:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health system_file:lnk_file { getattr };
+allow batt_health vendor_default_prop:file { getattr map open read };
+allow batt_health vendor_file_type:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health vendor_file_type:file { execute getattr map open read };
+allow batt_health vendor_file_type:lnk_file { getattr read };
+allow batt_health vendor_memtest_data_file:dir { add_name getattr ioctl lock open read remove_name search watch watch_reads write };
+allow batt_health vendor_memtest_data_file:file { append create getattr ioctl lock map open read rename setattr unlink watch watch_reads write };
+allow batt_health vendor_mot_boot_prop:file { getattr map open read };
+allow batt_health vendor_mot_hw_prop:file { getattr map open read };
+allow batt_health vendor_mot_unique_id_prop:file { getattr map open read };
+allow batt_health vendor_persist_file:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health vendor_persist_file:lnk_file { read };
+allow batt_health vendor_sysfs_battery_supply:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health vendor_sysfs_battery_supply:file { append getattr ioctl lock map open read watch watch_reads write };
+allow batt_health vendor_sysfs_battery_supply:lnk_file { append getattr ioctl lock map open read watch watch_reads write };
+allow batt_health vendor_sysfs_esoc:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health vendor_sysfs_esoc:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_sysfs_esoc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_sysfs_gpu_max_clock:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_sysfs_graphics:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health vendor_sysfs_graphics:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_sysfs_graphics:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_sysfs_kgsl:dir { search };
+allow batt_health vendor_sysfs_kgsl_gpu_model:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_sysfs_kgsl_gpubusy:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_sysfs_kgsl_max_gpuclk:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_sysfs_public:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health vendor_sysfs_public:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_sysfs_public:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_sysfs_soc:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health vendor_sysfs_soc:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_sysfs_soc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_sysfs_ssr:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health vendor_sysfs_ssr:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_sysfs_ssr:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_sysfs_usb_supply:dir { getattr ioctl lock open read search watch watch_reads };
+allow batt_health vendor_sysfs_usb_supply:file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_sysfs_usb_supply:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow batt_health vendor_unique_id_file:file { getattr ioctl lock map open read watch watch_reads };
+
+type_transition batt_health crash_dump_exec:process crash_dump;
+type_transition batt_health netutils_wrapper_exec:process netutils_wrapper;

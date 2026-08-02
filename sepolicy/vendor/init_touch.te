@@ -1,0 +1,102 @@
+# SPDX-FileCopyrightText: 2026 The FlokoROM Project
+# SPDX-License-Identifier: Apache-2.0
+#
+# stock の vendor パーティションが積んでいる precompiled_sepolicy を
+# checkpolicy -b -M -C で CIL に戻し、そこから機械的に書き出したもの。
+# Motorola 自身のポリシーなので、手で書き起こすより取りこぼしが少ない。
+
+
+type init_touch, domain;
+type init_touch_exec, exec_type, file_type, vendor_file_type;
+
+init_daemon_domain(init_touch)
+
+allow init_touch binder_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow init_touch bugreport_data_file:file { getattr write };
+allow init_touch cgroup:dir { add_name lock open remove_name search write };
+allow init_touch cgroup:file { append lock map open write };
+allow init_touch cgroup_v2:dir { add_name lock open remove_name search write };
+allow init_touch cgroup_v2:file { append lock map open write };
+allow init_touch firmware_file:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch firmware_file:file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch firmware_file:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch hwbinder_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow init_touch init:unix_stream_socket { connectto };
+allow init_touch kmsg_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow init_touch mnt_vendor_file:dir { search };
+allow init_touch motobox_exec:file { execute execute_no_trans getattr ioctl lock map open read watch watch_reads };
+allow init_touch netutils_wrapper:process { rlimitinh siginh transition };
+allow init_touch netutils_wrapper_exec:file { execute getattr map open read };
+allow init_touch powerctl_prop:file { getattr map open read };
+allow init_touch powerctl_prop:property_service { set };
+allow init_touch property_socket:sock_file { write };
+allow init_touch rootfs:lnk_file { getattr };
+allow init_touch same_process_hal_file:file { execute getattr map open read };
+allow init_touch self:capability { chown fowner sys_module };
+allow init_touch self:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch self:fd { use };
+allow init_touch self:fifo_file { append getattr ioctl lock map open read watch watch_reads write };
+allow init_touch self:file { append getattr ioctl lock map open read watch watch_reads write };
+allow init_touch self:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch self:lockdown { confidentiality };
+allow init_touch self:process { fork getattr getcap getpgid getsched getsession setcap setpgid setrlimit setsched sigchld sigkill signal signull sigstop };
+allow init_touch self:unix_dgram_socket { append bind connect create getattr getopt ioctl lock map read sendto setattr setopt shutdown write };
+allow init_touch self:unix_stream_socket { accept append bind connect connectto create getattr getopt ioctl listen lock map read setattr setopt shutdown write };
+allow init_touch sysfs:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch sysfs:file { getattr ioctl lock map open read setattr watch watch_reads write };
+allow init_touch sysfs:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch sysfs_fs_incfs_features:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch sysfs_fs_incfs_features:file { getattr ioctl lock map open read setattr watch watch_reads write };
+allow init_touch sysfs_fs_incfs_features:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch sysfs_fs_incfs_metrics:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch sysfs_fs_incfs_metrics:file { getattr ioctl lock map open read setattr watch watch_reads write };
+allow init_touch sysfs_fs_incfs_metrics:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch sysfs_thermal:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch sysfs_thermal:file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch sysfs_thermal:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch sysfs_touchclass:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch sysfs_touchclass:file { append getattr ioctl lock map open read setattr watch watch_reads write };
+allow init_touch system_file:lnk_file { getattr };
+allow init_touch vendor_default_prop:file { getattr map open read };
+allow init_touch vendor_file:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch vendor_file:file { execute_no_trans };
+allow init_touch vendor_file:system { module_load };
+allow init_touch vendor_file_type:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch vendor_file_type:file { execute getattr map open read };
+allow init_touch vendor_file_type:lnk_file { getattr read };
+allow init_touch vendor_mot_boot_prop:file { getattr map open read };
+allow init_touch vendor_mot_hw_prop:file { getattr map open read };
+allow init_touch vendor_mot_hw_prop:property_service { set };
+allow init_touch vendor_mot_touchscreen_prop:file { getattr map open read };
+allow init_touch vendor_mot_touchscreen_prop:property_service { set };
+allow init_touch vendor_mot_unique_id_prop:file { getattr map open read };
+allow init_touch vendor_persist_file:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch vendor_persist_file:lnk_file { read };
+allow init_touch vendor_shell_exec:file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_sysfs_esoc:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch vendor_sysfs_esoc:file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_sysfs_esoc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_sysfs_gpu_max_clock:file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_sysfs_graphics:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch vendor_sysfs_graphics:file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_sysfs_graphics:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_sysfs_kgsl:dir { search };
+allow init_touch vendor_sysfs_kgsl_gpu_model:file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_sysfs_kgsl_gpubusy:file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_sysfs_kgsl_max_gpuclk:file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_sysfs_public:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch vendor_sysfs_public:file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_sysfs_public:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_sysfs_sectouch:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch vendor_sysfs_sectouch:file { append getattr ioctl lock map open read setattr watch watch_reads write };
+allow init_touch vendor_sysfs_soc:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch vendor_sysfs_soc:file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_sysfs_soc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_sysfs_ssr:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch vendor_sysfs_ssr:file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_sysfs_ssr:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_toolbox_exec:file { execute execute_no_trans getattr ioctl lock map open read watch watch_reads };
+allow init_touch vendor_unique_id_file:file { getattr ioctl lock map open read watch watch_reads };
+
+type_transition init_touch crash_dump_exec:process crash_dump;
+type_transition init_touch netutils_wrapper_exec:process netutils_wrapper;

@@ -1,0 +1,109 @@
+# SPDX-FileCopyrightText: 2026 The FlokoROM Project
+# SPDX-License-Identifier: Apache-2.0
+#
+# stock の vendor パーティションが積んでいる precompiled_sepolicy を
+# checkpolicy -b -M -C で CIL に戻し、そこから機械的に書き出したもの。
+# Motorola 自身のポリシーなので、手で書き起こすより取りこぼしが少ない。
+
+
+type init_fingerprint, domain;
+type init_fingerprint_exec, exec_type, file_type, vendor_file_type;
+
+init_daemon_domain(init_fingerprint)
+
+allow init_fingerprint binder_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow init_fingerprint bugreport_data_file:file { getattr write };
+allow init_fingerprint cgroup:dir { add_name lock open remove_name search write };
+allow init_fingerprint cgroup:file { append lock map open write };
+allow init_fingerprint cgroup_v2:dir { add_name lock open remove_name search write };
+allow init_fingerprint cgroup_v2:file { append lock map open write };
+allow init_fingerprint ctl_start_prop:file { getattr map open read };
+allow init_fingerprint ctl_start_prop:property_service { set };
+allow init_fingerprint ctl_stop_prop:file { getattr map open read };
+allow init_fingerprint ctl_stop_prop:property_service { set };
+allow init_fingerprint egis_ident:process { rlimitinh siginh transition };
+allow init_fingerprint egis_ident_exec:file { execute getattr map open read };
+allow init_fingerprint file_contexts_file:file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint fpc_ident:process { rlimitinh siginh transition };
+allow init_fingerprint fpc_ident_exec:file { execute getattr map open read };
+allow init_fingerprint hwbinder_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow init_fingerprint init:unix_stream_socket { connectto };
+allow init_fingerprint kernel:key { search };
+allow init_fingerprint kmsg_device:chr_file { append getattr ioctl lock map open read watch watch_reads write };
+allow init_fingerprint mnt_vendor_file:dir { search };
+allow init_fingerprint motobox_exec:file { execute execute_no_trans getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint netutils_wrapper:process { rlimitinh siginh transition };
+allow init_fingerprint netutils_wrapper_exec:file { execute getattr map open read };
+allow init_fingerprint persist_fps_file:dir { add_name getattr ioctl lock open read search watch watch_reads write };
+allow init_fingerprint persist_fps_file:file { append create getattr ioctl lock map open read rename setattr unlink watch watch_reads write };
+allow init_fingerprint proc_hwconf:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_fingerprint proc_hwconf:file { append create getattr ioctl lock map open read rename setattr unlink watch watch_reads write };
+allow init_fingerprint property_socket:sock_file { write };
+allow init_fingerprint rootfs:lnk_file { getattr };
+allow init_fingerprint same_process_hal_file:file { execute getattr map open read };
+allow init_fingerprint self:capability { sys_module };
+allow init_fingerprint self:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_fingerprint self:fd { use };
+allow init_fingerprint self:fifo_file { append getattr ioctl lock map open read watch watch_reads write };
+allow init_fingerprint self:file { append getattr ioctl lock map open read watch watch_reads write };
+allow init_fingerprint self:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint self:lockdown { confidentiality };
+allow init_fingerprint self:process { fork getattr getcap getpgid getsched getsession setcap setpgid setrlimit setsched sigchld sigkill signal signull sigstop };
+allow init_fingerprint self:unix_dgram_socket { append bind connect create getattr getopt ioctl lock map read sendto setattr setopt shutdown write };
+allow init_fingerprint self:unix_stream_socket { accept append bind connect connectto create getattr getopt ioctl listen lock map read setattr setopt shutdown write };
+allow init_fingerprint sysfs:dir { open read relabelfrom };
+allow init_fingerprint sysfs:file { getattr relabelfrom };
+allow init_fingerprint sysfs:lnk_file { getattr relabelfrom };
+allow init_fingerprint sysfs_fpc:dir { getattr ioctl lock open read relabelto search watch watch_reads };
+allow init_fingerprint sysfs_fpc:file { getattr ioctl lock map open read relabelto watch watch_reads };
+allow init_fingerprint sysfs_fpc:lnk_file { getattr ioctl lock map open read relabelto watch watch_reads };
+allow init_fingerprint sysfs_fs_incfs_features:dir { open read relabelfrom };
+allow init_fingerprint sysfs_fs_incfs_features:file { getattr relabelfrom };
+allow init_fingerprint sysfs_fs_incfs_features:lnk_file { getattr relabelfrom };
+allow init_fingerprint sysfs_fs_incfs_metrics:dir { open read relabelfrom };
+allow init_fingerprint sysfs_fs_incfs_metrics:file { getattr relabelfrom };
+allow init_fingerprint sysfs_fs_incfs_metrics:lnk_file { getattr relabelfrom };
+allow init_fingerprint sysfs_thermal:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_fingerprint sysfs_thermal:file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint sysfs_thermal:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint system_file:lnk_file { getattr };
+allow init_fingerprint vendor_default_prop:file { getattr map open read };
+allow init_fingerprint vendor_file:system { module_load };
+allow init_fingerprint vendor_file_type:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_fingerprint vendor_file_type:file { execute getattr map open read };
+allow init_fingerprint vendor_file_type:lnk_file { getattr read };
+allow init_fingerprint vendor_mot_boot_prop:file { getattr map open read };
+allow init_fingerprint vendor_mot_fingerprint_prop:file { getattr map open read };
+allow init_fingerprint vendor_mot_fingerprint_prop:property_service { set };
+allow init_fingerprint vendor_mot_hw_prop:file { getattr map open read };
+allow init_fingerprint vendor_mot_init_prop:file { getattr map open read };
+allow init_fingerprint vendor_mot_unique_id_prop:file { getattr map open read };
+allow init_fingerprint vendor_persist_file:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_fingerprint vendor_persist_file:lnk_file { read };
+allow init_fingerprint vendor_sysfs_esoc:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_fingerprint vendor_sysfs_esoc:file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint vendor_sysfs_esoc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint vendor_sysfs_gpu_max_clock:file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint vendor_sysfs_graphics:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_fingerprint vendor_sysfs_graphics:file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint vendor_sysfs_graphics:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint vendor_sysfs_kgsl:dir { search };
+allow init_fingerprint vendor_sysfs_kgsl_gpu_model:file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint vendor_sysfs_kgsl_gpubusy:file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint vendor_sysfs_kgsl_max_gpuclk:file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint vendor_sysfs_public:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_fingerprint vendor_sysfs_public:file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint vendor_sysfs_public:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint vendor_sysfs_soc:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_fingerprint vendor_sysfs_soc:file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint vendor_sysfs_soc:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint vendor_sysfs_ssr:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_fingerprint vendor_sysfs_ssr:file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint vendor_sysfs_ssr:lnk_file { getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint vendor_toolbox_exec:file { execute execute_no_trans getattr ioctl lock map open read watch watch_reads };
+allow init_fingerprint vendor_unique_id_file:file { getattr ioctl lock map open read watch watch_reads };
+
+type_transition init_fingerprint crash_dump_exec:process crash_dump;
+type_transition init_fingerprint egis_ident_exec:process egis_ident;
+type_transition init_fingerprint fpc_ident_exec:process fpc_ident;
+type_transition init_fingerprint netutils_wrapper_exec:process netutils_wrapper;
