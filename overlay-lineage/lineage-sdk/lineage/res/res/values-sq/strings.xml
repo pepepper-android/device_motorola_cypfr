@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: 2026 The FlokoROM Project
+     SPDX-License-Identifier: Apache-2.0
+
+     crDroid renames this string, which is the title of the version entry in
+     Settings > About phone. Substitute the product name, keeping each
+     translation's own wording.
+-->
+<resources>
+    <string name="lineage_version">Versioni i Floko</string>
+</resources>
