@@ -1,0 +1,32 @@
+# SPDX-FileCopyrightText: 2026 The FlokoROM Project
+# SPDX-License-Identifier: Apache-2.0
+
+# motorola.hardware.camera.desktop@2.0-service は Ready For のデスクトップ
+# モードでこの端末を webcam にするための HAL。この ROM は Ready For を積んで
+# いないので誰も呼ばないが、init.mmi ではなく自前の .rc が class hal で
+# 無条件に起動するので、常に動いている。
+#
+# stock の file_contexts にもラベルが無く、この ROM でも無かったので、
+# u:r:init:s0 のまま動いていた。init のドメインで動くぶん denial は init の
+# ものとして出て、起動ログの init 95 件のうち 82 件がこの一つのサービス
+# だった - poll_thread が 78 件、本体が 4 件。
+#
+# 動かす以上は自分のドメインで動かす。使わないなら proprietary-files.txt から
+# バイナリと .rc を落とすほうが素直だが、vintf/manifest.xml が
+# ICameraDesktop を宣言しているので、そちらも一緒に外す必要がある。
+type hal_camera_desktop, domain;
+type hal_camera_desktop_exec, exec_type, vendor_file_type, file_type;
+type hal_camera_desktop_hwservice, hwservice_manager_type;
+
+init_daemon_domain(hal_camera_desktop)
+hwbinder_use(hal_camera_desktop)
+add_hwservice(hal_camera_desktop, hal_camera_desktop_hwservice)
+
+# UVC ガジェットの映像ノード。
+allow hal_camera_desktop video_device:chr_file rw_file_perms;
+
+# 表示側の情報を見る。
+allow hal_camera_desktop vendor_sysfs_graphics:dir search;
+allow hal_camera_desktop vendor_sysfs_graphics:file r_file_perms;
+
+allow hal_camera_desktop same_process_hal_file:file { execute getattr map open read };

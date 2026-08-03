@@ -117,3 +117,6 @@
 # /dev/esfp0 は共通ツリーが tee_device で拾っている。同じパスに
 # 別の型を当てると checkfc が落ちるので、egis_ident には tee_device
 # への allow を足してある。etsd_device の宣言だけ残す。
+
+# Ready For のデスクトップモード用カメラ HAL。上のコメント参照。
+/(vendor|system/vendor)/bin/hw/motorola\.hardware\.camera\.desktop@2\.0-service   u:object_r:hal_camera_desktop_exec:s0

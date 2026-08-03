@@ -53,3 +53,20 @@ allow vendor_moto_init_shell sysfs_android_usb:file rw_file_perms;
 allow vendor_moto_init_shell kmsg_device:chr_file { open write };
 allow vendor_moto_init_shell vendor_mot_fingerprint_prop:property_service set;
 allow vendor_moto_init_shell { system_prop vendor_radio_prop }:file r_file_perms;
+
+# Settings のメモリ情報が /proc/swaps を読む。platform_app のうち
+# MemoryInfoThread からで、起動ログの platform_app 57 件のうち 42 件。
+allow platform_app proc_swaps:file r_file_perms;
+
+# 同じく Settings 系がリフレッシュレートを見にいく。
+allow platform_app vendor_sysfs_graphics:dir search;
+allow platform_app vendor_sysfs_graphics:file r_file_perms;
+
+# init が振動モーターの trigger ノードに書く。
+allow init sysfs:file { open setattr write };
+
+# /vendor/fsg のマウント。
+allow init fsg_file:filesystem { getattr mount relabelfrom };
+
+# uevent の受信。
+allow init self:netlink_kobject_uevent_socket { bind create getopt read setopt };
