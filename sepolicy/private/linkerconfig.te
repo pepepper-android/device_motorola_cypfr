@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The FlokoROM Project
+# SPDX-License-Identifier: Apache-2.0
+
+# linkerconfig が起動時に自分自身へ signal を送る (kill(pid, 0) での存在確認)。
+# 実害は無いが enforcing では毎回 denial になる。
+allow linkerconfig self:capability kill;
