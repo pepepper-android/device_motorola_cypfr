@@ -63,13 +63,20 @@ BOARD_KERNEL_CMDLINE += buildvariant=user
 # built with permissive that had only been flashed to one slot, so the A/B
 # update landed on the other one and enforcing came as a surprise.
 #
-# The policy is not ready for it. /vendor/bin/hw and the Motorola daemons are
-# still turning up denials that were only ever logged, and until those are
-# cleared the honest default is permissive - the logs then show everything
-# rather than the boot dying at whichever denial comes first.
+# Four permissive boots got the log from 428407 denials down to what is left
+# here, and none of the remainder is something enforcing should trip over:
 #
-# Flip this to true once a boot comes up clean.
-BOARD_USE_ENFORCING_SELINUX := false
+#   Magisk reading its own /data/adb            171, 159 of them under zygote
+#   bionic walking the property areas            59, dontaudit'd where reachable
+#   apps probing /proc for what AOSP denies      35, the policy working
+#   the rest                                     ~15, fixed since
+#
+# The Motorola daemons run in their own domains and have been clean for two
+# builds. The two core-side denials are ones AOSP dontaudits itself.
+#
+# If this turns out to be wrong the bootloader falls back to the other slot,
+# which is how the empty-vendor-ramdisk failure recovered.
+BOARD_USE_ENFORCING_SELINUX := true
 
 ifneq ($(BOARD_USE_ENFORCING_SELINUX),true)
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
