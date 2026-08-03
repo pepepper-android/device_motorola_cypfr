@@ -1,0 +1,9 @@
+# SPDX-FileCopyrightText: 2026 The FlokoROM Project
+# SPDX-License-Identifier: Apache-2.0
+
+# 指紋 HAL は AIDL の本体とは別に、Motorola 独自の HIDL
+# com.motorola.hardware.biometric.fingerprint::IMotoFingerPrint も登録しようと
+# する。hwservice_contexts にエントリが無く default_android_hwservice に落ちて
+# いたので add も find も通らず、この HIDL だけ登録に失敗していた。
+type hal_fingerprint_moto_hwservice, hwservice_manager_type;
+add_hwservice(hal_fingerprint_default, hal_fingerprint_moto_hwservice)

@@ -91,3 +91,30 @@ set_prop(vendor_init, vendor_ssr_prop)
 # bootloader_prop に落ちる。core 側の型を vendor_init に書かせるのは
 # neverallow に触れるので、ここでは触らない。プロパティが立たないだけで、
 # 前者はデモモードの画面回転ロック、後者は既に別経路で入っている。
+
+# rild が android.frameworks.sensorservice.ISensorManager を探す。fwk_ で
+# 始まるサービスは vendor から引くために framework が出しているものなので、
+# find を与えるのが想定された使い方。
+allow rild fwk_sensor_service:service_manager find;
+
+# 実機の denial から、プロパティを 1 つずつ。
+allow hal_camera_default vendor_persist_tcm_prop:file r_file_perms;
+# hal_audio_sysbta は sysbta が system 側で動くぶん core のドメインなので、
+# vendor ポリシーからは型すら見えない。vendor_default_prop を読めない件は
+# ここでは直せない。3 件。
+
+# bionic のプロパティ領域走査。hal_camera_default と同じ理由でこちらも黙らせる。
+# read は落とさないので、本当に読めなくて困る場合は denial として出る。
+dontaudit {
+    hal_camera_desktop
+    vendor_thermal-engine
+    vendor_qti_init_shell
+    vendor_moto_init_shell
+    vendor_wcnss_service
+    rild
+} property_type:file { getattr map open };
+
+# org.codeaurora.ims が motoexttelephony を探しにくるが、この ROM は
+# Motorola の拡張テレフォニーアプリを積んでいないので、そもそも存在しない。
+# 見つからないのが正しい挙動なので、ログだけ止める。
+dontaudit vendor_qtelephony default_android_service:service_manager find;
