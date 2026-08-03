@@ -95,7 +95,6 @@
 /sys/devices/platform/soc/soc:muc_uart(/.*)? u:object_r:sysfs_muc_uart:s0
 /sys/devices/virtual/fingerprint/fpc1020(/.*)? u:object_r:sysfs_fpc:s0
 /dev/sec                        u:object_r:shwi_device:s0
-/dev/esfp0                       u:object_r:etsd_device:s0
 /dev/byte-cntr u:object_r:vendor_qdss_device:s0
 /dev/mot_hob_ram                u:object_r:hob_device:s0
 /dev/socket/tcmdhelp            u:object_r:tcmdhelp_socket:s0
@@ -113,3 +112,8 @@
 /dev/block/bootdevice/by-name/utags              u:object_r:utags_block_device:s0
 /dev/block/bootdevice/by-name/utagsBackup        u:object_r:utags_block_device:s0
 /dev/block/bootdevice/by-name/logs-charging      u:object_r:psylogs_block_device:s0
+/(vendor|system/vendor)/bin/motobox	u:object_r:motobox_exec:s0
+
+# /dev/esfp0 は共通ツリーが tee_device で拾っている。同じパスに
+# 別の型を当てると checkfc が落ちるので、egis_ident には tee_device
+# への allow を足してある。etsd_device の宣言だけ残す。

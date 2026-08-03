@@ -1,5 +1,9 @@
+# device/motorola/common/sepolicy/vendor が既に vendor_mot_prop /
+# vendor_nfc_prop で拾っている接頭辞は外してある。同じ接頭辞に別の型を
+# 当てると property_info_checker が落ちるため。該当ドメインには下の
+# .te で既存型への allow を足してある。
+
 vendor.hw.              u:object_r:vendor_mot_hw_prop:s0
-ro.vendor.hw.           u:object_r:vendor_mot_hw_prop:s0
 ro.vendor.bootreason    u:object_r:vendor_mot_init_prop:s0
 vendor.log.aplogd.      u:object_r:vendor_mot_aplogd_prop:s0
 vendor.boot_completed   u:object_r:vendor_mot_init_prop:s0
@@ -46,17 +50,13 @@ ro.boot.adb_early                  u:object_r:vendor_mot_boot_prop:s0
 ro.boot.force_aplogd_enable        u:object_r:vendor_mot_boot_prop:s0
 ro.boot.radio                      u:object_r:vendor_mot_boot_prop:s0
 ro.boot.last_powerup_reason        u:object_r:vendor_mot_boot_prop:s0
-vendor.nfc.fw_status                u:object_r:vendor_mot_nfc_prop:s0
-persist.vendor.nfc.                 u:object_r:vendor_mot_nfc_prop:s0
 persist.vendor.touch.       u:object_r:vendor_mot_touchscreen_prop:s0
-ro.vendor.touch.                u:object_r:vendor_mot_touchscreen_prop:s0
 ro.boot.wifimacaddr  u:object_r:vendor_mot_unique_id_prop:s0
 ro.vendor.boot.serialno u:object_r:vendor_mot_unique_id_prop:s0
 ro.vendor.hw.gabutton   u:object_r:vendor_hw_gabutton_prop:s0
 vendor.ese.status            	    u:object_r:vendor_mot_nfc_prop:s0
 ro.vendor.hw.fps_id             u:object_r:vendor_mot_fingerprint_prop:s0
 ro.vendor.hw.fps_id2            u:object_r:vendor_mot_fingerprint_prop:s0
-vendor.hw.fingerprint.status    u:object_r:vendor_mot_fingerprint_prop:s0
 vendor.hw.fingerprint.hwid      u:object_r:vendor_mot_fingerprint_prop:s0
 vendor.hw.fps.ident             u:object_r:vendor_mot_fingerprint_prop:s0
 persist.vendor.hardware.fingerprint  u:object_r:vendor_mot_fingerprint_prop:s0

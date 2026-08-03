@@ -79,3 +79,9 @@ allow egis_ident vendor_unique_id_file:file { getattr ioctl lock map open read w
 
 type_transition egis_ident crash_dump_exec:process crash_dump;
 type_transition egis_ident netutils_wrapper_exec:process netutils_wrapper;
+
+
+# 上の細かい型は共通ツリーが既に vendor_mot_prop / vendor_nfc_prop で
+# 拾っている接頭辞ぶんを持てないので、そちらにも同じ権限を与える。
+allow egis_ident vendor_mot_prop:file { getattr map open read };
+allow egis_ident vendor_mot_prop:property_service { set };

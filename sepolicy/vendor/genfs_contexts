@@ -1,6 +1,7 @@
-genfscon proc "/bootinfo" u:object_r:proc_bootinfo:s0
-genfscon proc "/config" u:object_r:proc_hwconf:s0
-genfscon proc "/hw" u:object_r:proc_hwconf:s0
+# /bootinfo /config /hw は device/motorola/common が既に vendor_proc_hw で
+# 拾っている。genfscon の重複はポリシーのビルドを落とすので外し、
+# 各 .te には vendor_proc_hw への allow を足してある。
+
 genfscon sysfs "/class/hwmon" u:object_r:sysfs_hwmon:s0
 genfscon sysfs "/devices/platform/soc/4a80000.spi/spi_master/spi0/spi0.0/touchscreen/primary" u:object_r:sysfs_touchclass:s0
 genfscon sysfs "/devices/virtual/touchscreen/primary" u:object_r:sysfs_touchclass:s0

@@ -65,6 +65,15 @@ type vendor_memtest_data_file, data_file_type, file_type;
 type vendor_qdss_device, dev_type;
 type vendor_unique_id_file, fs_type, sysfs_type;
 
+# 我々が起動しないデーモンの exec 型。ドメインは作っていないが、
+# 起動するデーモンの側が execute_no_trans や getattr で参照するので
+# 宣言だけ要る。motobox は積んでいるので file_contexts でも当てる。
+type motobox_exec, exec_type, file_type, vendor_file_type;
+type kpgather_exec, exec_type, file_type, vendor_file_type;
+type memtest_exec, exec_type, file_type, vendor_file_type;
+type sensor_hub_exec, exec_type, file_type, vendor_file_type;
+type sns_mot_client_exec, exec_type, file_type, vendor_file_type;
+
 # Motorola 独自 prop
 vendor_restricted_prop(vendor_hw_gabutton_prop);
 vendor_restricted_prop(vendor_mot_aplogd_prop);

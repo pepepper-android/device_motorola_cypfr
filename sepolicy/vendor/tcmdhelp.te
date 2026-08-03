@@ -6,7 +6,7 @@
 # Motorola 自身のポリシーなので、手で書き起こすより取りこぼしが少ない。
 
 
-type tcmdhelp, domain, hal_mottcmd_client;
+type tcmdhelp, domain;
 type tcmdhelp_exec, exec_type, file_type, vendor_file_type;
 
 init_daemon_domain(tcmdhelp)
@@ -137,3 +137,13 @@ type_transition tcmdhelp crash_dump_exec:process crash_dump;
 type_transition tcmdhelp netutils_wrapper_exec:process netutils_wrapper;
 type_transition tcmdhelp sns_mot_client_exec:process sns_mot_client;
 type_transition tcmdhelp vendor_wcnss_service_exec:process vendor_wcnss_service;
+
+
+# 上の細かい型は共通ツリーが既に vendor_mot_prop / vendor_nfc_prop で
+# 拾っている接頭辞ぶんを持てないので、そちらにも同じ権限を与える。
+allow tcmdhelp vendor_mot_prop:file { getattr map open read };
+
+# 上の型が当たらないパスは共通ツリーが別の型で拾っているので、
+# そちらにも同じ権限を与える。
+allow tcmdhelp vendor_proc_hw:dir { search };
+allow tcmdhelp vendor_proc_hw:file { append getattr ioctl lock map open read watch watch_reads write };

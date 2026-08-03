@@ -107,3 +107,14 @@ type_transition init_fingerprint crash_dump_exec:process crash_dump;
 type_transition init_fingerprint egis_ident_exec:process egis_ident;
 type_transition init_fingerprint fpc_ident_exec:process fpc_ident;
 type_transition init_fingerprint netutils_wrapper_exec:process netutils_wrapper;
+
+
+# 上の細かい型は共通ツリーが既に vendor_mot_prop / vendor_nfc_prop で
+# 拾っている接頭辞ぶんを持てないので、そちらにも同じ権限を与える。
+allow init_fingerprint vendor_mot_prop:file { getattr map open read };
+allow init_fingerprint vendor_mot_prop:property_service { set };
+
+# 上の型が当たらないパスは共通ツリーが別の型で拾っているので、
+# そちらにも同じ権限を与える。
+allow init_fingerprint vendor_proc_hw:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_fingerprint vendor_proc_hw:file { append create getattr ioctl lock map open read rename setattr unlink watch watch_reads write };

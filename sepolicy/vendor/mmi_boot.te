@@ -98,3 +98,15 @@ allow mmi_boot vendor_unique_id_file:file { getattr ioctl lock map open read wat
 
 type_transition mmi_boot crash_dump_exec:process crash_dump;
 type_transition mmi_boot netutils_wrapper_exec:process netutils_wrapper;
+
+
+# 上の細かい型は共通ツリーが既に vendor_mot_prop / vendor_nfc_prop で
+# 拾っている接頭辞ぶんを持てないので、そちらにも同じ権限を与える。
+allow mmi_boot vendor_mot_prop:file { getattr map open read };
+allow mmi_boot vendor_mot_prop:property_service { set };
+
+# 上の型が当たらないパスは共通ツリーが別の型で拾っているので、
+# そちらにも同じ権限を与える。
+allow mmi_boot vendor_proc_hw:file { getattr ioctl lock map open read watch watch_reads };
+allow mmi_boot vendor_proc_hw:dir { search };
+allow mmi_boot vendor_proc_hw:file { append getattr ioctl lock map open read watch watch_reads write };

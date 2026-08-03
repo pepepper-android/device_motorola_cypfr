@@ -108,3 +108,14 @@ allow init_hw vendor_unique_id_file:file { getattr ioctl lock map open read watc
 
 type_transition init_hw crash_dump_exec:process crash_dump;
 type_transition init_hw netutils_wrapper_exec:process netutils_wrapper;
+
+
+# 上の細かい型は共通ツリーが既に vendor_mot_prop / vendor_nfc_prop で
+# 拾っている接頭辞ぶんを持てないので、そちらにも同じ権限を与える。
+allow init_hw vendor_mot_prop:file { getattr map open read };
+allow init_hw vendor_mot_prop:property_service { set };
+
+# 上の型が当たらないパスは共通ツリーが別の型で拾っているので、
+# そちらにも同じ権限を与える。
+allow init_hw vendor_proc_hw:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_hw vendor_proc_hw:file { append create getattr ioctl lock map open read rename setattr unlink watch watch_reads write };
