@@ -118,3 +118,6 @@ allow init_fingerprint vendor_mot_prop:property_service { set };
 # そちらにも同じ権限を与える。
 allow init_fingerprint vendor_proc_hw:dir { getattr ioctl lock open read search watch watch_reads };
 allow init_fingerprint vendor_proc_hw:file { append create getattr ioctl lock map open read rename setattr unlink watch watch_reads write };
+# 同上。stock は persist_fps_file、共通ツリーは vendor_persist_fingerprint_file。
+allow init_fingerprint vendor_persist_fingerprint_file:dir search;
+allow init_fingerprint vendor_persist_fingerprint_file:file { getattr open read };

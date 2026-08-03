@@ -92,3 +92,7 @@ allow mbm_spy vendor_mot_prop:file { getattr map open read };
 # 上の型が当たらないパスは共通ツリーが別の型で拾っているので、
 # そちらにも同じ権限を与える。
 allow mbm_spy vendor_proc_hw:file { getattr ioctl lock map open read watch watch_reads };
+# 同上。stock は utags_block_device / vendor_default_prop を許可しているが、
+# 実機では vendor_utags_block_device と default_prop に当たる。
+allow mbm_spy vendor_utags_block_device:blk_file { getattr ioctl map open read write };
+allow mbm_spy default_prop:file { getattr map open read };

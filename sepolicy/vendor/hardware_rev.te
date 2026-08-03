@@ -95,3 +95,10 @@ type_transition hardware_rev netutils_wrapper_exec:process netutils_wrapper;
 # 上の細かい型は共通ツリーが既に vendor_mot_prop / vendor_nfc_prop で
 # 拾っている接頭辞ぶんを持てないので、そちらにも同じ権限を与える。
 allow hardware_rev vendor_mot_prop:file { getattr map open read };
+# stock は同じ対象を別の型名で許可している。device/motorola/common が
+# /sys/class/touchscreen を vendor_sysfs_touchpanel、Motorola は
+# sysfs_touchclass と呼ぶ、というだけの違いで、stock 由来のルールは
+# 何もラベルされていない型を指していて空振りしていた。実機の denial から。
+allow hardware_rev vendor_sysfs_touchpanel:dir { open read search };
+allow hardware_rev vendor_sysfs_touchpanel:file { getattr open read };
+allow hardware_rev vendor_sysfs_battery_supply:dir search;
