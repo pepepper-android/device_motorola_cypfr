@@ -30,3 +30,7 @@ allow hal_camera_desktop vendor_sysfs_graphics:dir search;
 allow hal_camera_desktop vendor_sysfs_graphics:file r_file_perms;
 
 allow hal_camera_desktop same_process_hal_file:file { execute getattr map open read };
+
+# 実機の denial から。
+allow hal_camera_desktop hwservicemanager_prop:file r_file_perms;
+allow hal_camera_desktop self:netlink_kobject_uevent_socket { bind create getopt read setopt };

@@ -7,3 +7,25 @@ genfscon sysfs "/devices/platform/soc/4a80000.spi/spi_master/spi0/spi0.0/touchsc
 genfscon sysfs "/devices/virtual/touchscreen/primary" u:object_r:sysfs_touchclass:s0
 genfscon sysfs "/firmware/devicetree/base/chosen" u:object_r:sysfs_dt_chosen:s0
 genfscon sysfs "/module/qpnp_smbcharger_mmi/parameters/debug_enabled" u:object_r:sysfs_batt:s0
+
+# wakeup ノード。system_suspend は sysfs_wakeup を読む許可を AOSP から
+# もらっているのに、ここでは denial になっていた。理由は親のラベルで、
+#
+#   genfscon sysfs /devices/platform/soc/soc:mmi,discrete-charging
+#     u:object_r:vendor_sysfs_battery_supply:s0
+#
+# が前方一致なので、その下の power_supply/pc_port/wakeup56 まで充電系の型に
+# なっていた。genfscon は長いパスが勝つので、wakeup のところだけ貼り直す。
+# 番号 (wakeup56, wakeup61) は登録順で変わるため、番号の手前までを前方一致に
+# 使う - QCOM も同じ手を使っている。
+genfscon sysfs /devices/platform/soc/soc:mmi,discrete-charging/power_supply/pc_port/wakeup u:object_r:sysfs_wakeup:s0
+genfscon sysfs /devices/platform/soc/4c88000.i2c/i2c-1/1-0047/tcpc/type_c_port0/wakeup u:object_r:sysfs_wakeup:s0
+
+# Type-C の extcon。system_server が cable.1/name を読んで USB の接続状態を
+# 判定する。AOSP は /sys/class/extcon を sysfs_extcon で貼っているが、
+# system_server はデバイスパス側から来るのでそちらにも要る。
+genfscon sysfs /devices/platform/soc/soc:rt-pd-manager/extcon u:object_r:sysfs_extcon:s0
+
+# カメラの v4l2 ノード名。Ready For の HAL が読む。QCOM は legacy-um の legacy/ 側で
+# 同じ video4linux/*/name を vendor_sysfs_graphics で貼っているので、それに合わせる。
+genfscon sysfs /devices/platform/soc/soc:qcom,cam-req-mgr/video4linux u:object_r:vendor_sysfs_graphics:s0

@@ -70,3 +70,24 @@ allow init fsg_file:filesystem { getattr mount relabelfrom };
 
 # uevent の受信。
 allow init self:netlink_kobject_uevent_socket { bind create getopt read setopt };
+
+# vendor_init が init rc から立てるプロパティ。型は宣言されているのに
+# vendor_init に set の許可が無かったもの:
+#
+#   persist.vendor.camera.physical.num      vendor_camera_prop
+#   persist.vendor.ims.cam_sensor_delay     vendor_ims_prop
+#   persist.vendor.nfc.config_file_name     vendor_nfc_prop
+#   persist.nfc_cfg.config_file_name        nfc_prop
+#   persist.vendor.rcs.presence.provision   vendor_persist_rcs_prop
+#   persist.vendor.ssr.restart_level        vendor_ssr_prop
+set_prop(vendor_init, vendor_camera_prop)
+set_prop(vendor_init, vendor_ims_prop)
+set_prop(vendor_init, vendor_nfc_prop)
+set_prop(vendor_init, nfc_prop)
+set_prop(vendor_init, vendor_persist_rcs_prop)
+set_prop(vendor_init, vendor_ssr_prop)
+
+# persist.demo.hdmirotationlock と ro.hardware は default_prop /
+# bootloader_prop に落ちる。core 側の型を vendor_init に書かせるのは
+# neverallow に触れるので、ここでは触らない。プロパティが立たないだけで、
+# 前者はデモモードの画面回転ロック、後者は既に別経路で入っている。
