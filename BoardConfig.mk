@@ -53,6 +53,28 @@ BOARD_KERNEL_CMDLINE += androidboot.hab.product=cypfr
 BOARD_KERNEL_CMDLINE += androidboot.hab.cid=50
 BOARD_KERNEL_CMDLINE += buildvariant=user
 
+# device/motorola/common/CommonConfig.mk has this switch, but nothing includes
+# that file - the same gap that leaves platform.mk and PlatformConfig.mk
+# unreachable - so the cmdline never carried androidboot.selinux at all and
+# every build has been enforcing.
+#
+# That was not obvious, because the boot logs said otherwise: all 428407 avc
+# denials in the last capture were permissive=1. They came from a vendor_boot
+# built with permissive that had only been flashed to one slot, so the A/B
+# update landed on the other one and enforcing came as a surprise.
+#
+# The policy is not ready for it. /vendor/bin/hw and the Motorola daemons are
+# still turning up denials that were only ever logged, and until those are
+# cleared the honest default is permissive - the logs then show everything
+# rather than the boot dying at whichever denial comes first.
+#
+# Flip this to true once a boot comes up clean.
+BOARD_USE_ENFORCING_SELINUX := false
+
+ifneq ($(BOARD_USE_ENFORCING_SELINUX),true)
+BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+endif
+
 BOARD_KERNEL_IMAGE_NAME := Image
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_SEPARATED_DTBO := true
