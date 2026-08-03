@@ -119,3 +119,8 @@ allow init_hw vendor_mot_prop:property_service { set };
 # そちらにも同じ権限を与える。
 allow init_hw vendor_proc_hw:dir { getattr ioctl lock open read search watch watch_reads };
 allow init_hw vendor_proc_hw:file { append create getattr ioctl lock map open read rename setattr unlink watch watch_reads write };
+
+# 上の vendor_mot_*_prop は property_contexts から外したので、
+# 実際に当たる bootloader_prop / vendor_default_prop 側にも与える。
+allow init_hw bootloader_prop:file { getattr map open read };
+allow init_hw vendor_default_prop:property_service { set };

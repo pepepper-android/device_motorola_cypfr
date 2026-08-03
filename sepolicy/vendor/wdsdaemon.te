@@ -75,3 +75,7 @@ type_transition wdsdaemon netutils_wrapper_exec:process netutils_wrapper;
 # 上の細かい型は共通ツリーが既に vendor_mot_prop / vendor_nfc_prop で
 # 拾っている接頭辞ぶんを持てないので、そちらにも同じ権限を与える。
 allow wdsdaemon vendor_mot_prop:file { getattr map open read };
+
+# 上の vendor_mot_*_prop は property_contexts から外したので、
+# 実際に当たる bootloader_prop / vendor_default_prop 側にも与える。
+allow wdsdaemon bootloader_prop:file { getattr map open read };

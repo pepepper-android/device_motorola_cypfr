@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The FlokoROM Project
+# SPDX-License-Identifier: Apache-2.0
+
+# 起動時に 16:03:58 の 1 秒間で 600 件、227 種のプロパティ型ぶんの denial が
+# 出る。全部 /dev/__properties__ の領域ファイルで、権限は必ず
+# { getattr map open } - read が一度も付かない。値を読んでいるのではなく、
+# bionic がプロパティ領域を端から mmap しているだけで、adbd_prop も
+# dalvik_config_prop も bootanim_config_prop も等しく舐めていく。
+#
+# カメラ HAL に 227 種のプロパティを allow するのは、通るとしても筋が悪い。
+# 実際に要るものは既に QCOM と Motorola のポリシーが与えている。
+# read を落とさずに残してあるので、本当にプロパティを読めなくて困る事態が
+# 起きたときはそちらが denial として出る。
+dontaudit hal_camera_default property_type:file { getattr map open };
+
+# WiFi のバージョン。カメラ HAL がチップの型番でチューニングを変えている。
+allow hal_camera_default vendor_wifi_version:file r_file_perms;

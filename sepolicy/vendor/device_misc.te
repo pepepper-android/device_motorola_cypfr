@@ -1,0 +1,55 @@
+# SPDX-FileCopyrightText: 2026 The FlokoROM Project
+# SPDX-License-Identifier: Apache-2.0
+#
+# 実機の起動ログから。ドメインごとに 1-2 本しかないので 1 ファイルにまとめる。
+
+# system_suspend が vendor_sysfs_battery_supply を読めない件はここでは直せない。
+# system_suspend は coredomain なので vendor ポリシーからは型すら見えず、
+# かといって system_ext 側からは vendor_sysfs_battery_supply が見えない。
+# /sys/class/power_supply を core 側の型 (sysfs_batteryinfo) で貼り直すのが
+# 筋だが、それは device/motorola/common の genfs_contexts に手を入れる話に
+# なるので別途。26 件。
+
+# 振動 HAL が /sys の強度ノードに書く。
+allow hal_vibrator_default sysfs:file rw_file_perms;
+
+# 指紋 HAL が perf HAL にヒントを投げる。
+allow hal_fingerprint_default vendor_hal_perf_default:binder call;
+allow hal_fingerprint_default vendor_hal_perf_hwservice:hwservice_manager find;
+
+# eSE の HAL が NFC のプロパティを立てる。
+allow hal_secure_element_default vendor_mot_nfc_prop:property_service set;
+allow hal_secure_element_default property_socket:sock_file write;
+allow hal_secure_element_default init:unix_stream_socket connectto;
+
+# ramdump 収集が /data を覗く。
+allow vendor_subsystem_ramdump mnt_user_file:dir search;
+allow vendor_subsystem_ramdump vendor_data_file:dir r_dir_perms;
+
+# /mnt/vendor/persist/factory をカーネルが読む - utags の初期値。
+allow kernel mnt_vendor_file:dir search;
+allow kernel persist_factory_file:dir search;
+allow kernel persist_factory_file:file r_file_perms;
+
+# installd がパーティションごとの使用量を数えるとき、読み取り専用で
+# マウントされている vendor 配下の別パーティションまで数えにいく。
+allow installd { bt_firmware_file firmware_file fsg_file }:filesystem quotaget;
+
+# /vendor/fsg のマウント。fsg_file は common/sepolicy/vendor で宣言され、
+# BoardConfig が context= で指定しているが associate が無かった。
+allow fsg_file fsg_file:filesystem associate;
+
+# libprocessgroup が cgroup の中身に signal を送るときに出る。自分自身への
+# kill なので実害は無いが、enforcing では毎回 denial になる。
+allow vdc self:capability kill;
+allow fsck self:capability kill;
+# linkerconfig も同じ理由で外してある。1 件。
+allow vendor_qti_init_shell self:capability kill;
+allow vendor_qti_init_shell sysfs:file write;
+
+# Motorola の init スクリプトが USB のガジェット設定と kmsg に書く。
+allow vendor_moto_init_shell sysfs_android_usb:dir search;
+allow vendor_moto_init_shell sysfs_android_usb:file rw_file_perms;
+allow vendor_moto_init_shell kmsg_device:chr_file { open write };
+allow vendor_moto_init_shell vendor_mot_fingerprint_prop:property_service set;
+allow vendor_moto_init_shell { system_prop vendor_radio_prop }:file r_file_perms;

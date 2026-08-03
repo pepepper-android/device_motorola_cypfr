@@ -102,3 +102,8 @@ allow hardware_rev vendor_mot_prop:file { getattr map open read };
 allow hardware_rev vendor_sysfs_touchpanel:dir { open read search };
 allow hardware_rev vendor_sysfs_touchpanel:file { getattr open read };
 allow hardware_rev vendor_sysfs_battery_supply:dir search;
+
+
+# 上の vendor_mot_*_prop は property_contexts から外したので、
+# 実際に当たる bootloader_prop / vendor_default_prop 側にも与える。
+allow hardware_rev bootloader_prop:file { getattr map open read };

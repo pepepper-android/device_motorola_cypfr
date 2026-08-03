@@ -121,3 +121,8 @@ allow init_fingerprint vendor_proc_hw:file { append create getattr ioctl lock ma
 # 同上。stock は persist_fps_file、共通ツリーは vendor_persist_fingerprint_file。
 allow init_fingerprint vendor_persist_fingerprint_file:dir search;
 allow init_fingerprint vendor_persist_fingerprint_file:file { getattr open read };
+
+
+# 上の vendor_mot_*_prop は property_contexts から外したので、
+# 実際に当たる bootloader_prop / vendor_default_prop 側にも与える。
+allow init_fingerprint bootloader_prop:file { getattr map open read };

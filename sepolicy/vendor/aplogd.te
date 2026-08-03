@@ -108,3 +108,7 @@ allow aplogd vendor_mot_prop:file { getattr map open read };
 # 上の型が当たらないパスは共通ツリーが別の型で拾っているので、
 # そちらにも同じ権限を与える。
 allow aplogd vendor_proc_hw:file { getattr ioctl lock map open read watch watch_reads };
+
+# 上の vendor_mot_*_prop は property_contexts から外したので、
+# 実際に当たる bootloader_prop / vendor_default_prop 側にも与える。
+allow aplogd bootloader_prop:file { getattr map open read };

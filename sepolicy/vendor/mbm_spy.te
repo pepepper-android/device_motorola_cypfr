@@ -96,3 +96,8 @@ allow mbm_spy vendor_proc_hw:file { getattr ioctl lock map open read watch watch
 # 実機では vendor_utags_block_device と default_prop に当たる。
 allow mbm_spy vendor_utags_block_device:blk_file { getattr ioctl map open read write };
 allow mbm_spy default_prop:file { getattr map open read };
+
+
+# 上の vendor_mot_*_prop は property_contexts から外したので、
+# 実際に当たる bootloader_prop / vendor_default_prop 側にも与える。
+allow mbm_spy bootloader_prop:file { getattr map open read };

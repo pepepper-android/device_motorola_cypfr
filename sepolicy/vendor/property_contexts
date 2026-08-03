@@ -1,12 +1,17 @@
+# ro.boot.* を含む 30 接頭辞をここで貼るのをやめた。stock の型名に寄せた
+# つもりが、ro.boot.carrier / ro.boot.device / ro.boot.lcd_density のような
+# 誰もが読むプロパティを vendor_restricted_prop に移してしまい、radio や
+# thermal-engine や wcnss_service が読めなくなっていた。radio は coredomain
+# なので、許可しようにも vendor_restricted_prop の neverallow に当たる。
+# 外せば ro.boot.* は bootloader_prop、残りは vendor_default_prop という
+# 本来の型に戻る。Motorola のデーモン側には下の .te でそちらを読ませてある。
+
 # device/motorola/common/sepolicy/vendor が既に vendor_mot_prop /
 # vendor_nfc_prop で拾っている接頭辞は外してある。同じ接頭辞に別の型を
 # 当てると property_info_checker が落ちるため。該当ドメインには下の
 # .te で既存型への allow を足してある。
 
-vendor.hw.              u:object_r:vendor_mot_hw_prop:s0
-ro.vendor.bootreason    u:object_r:vendor_mot_init_prop:s0
 vendor.log.aplogd.      u:object_r:vendor_mot_aplogd_prop:s0
-vendor.boot_completed   u:object_r:vendor_mot_init_prop:s0
 vendor.tcmd_system.     u:object_r:vendor_mot_tcmd_prop:s0
 vendor.tcmd.            u:object_r:vendor_mot_tcmd_prop:s0
 persist.vendor.tcmd            u:object_r:vendor_mot_tcmd_prop:s0
@@ -15,14 +20,6 @@ persist.vendor.factory         u:object_r:vendor_mot_factory_prop:s0
 persist.vendor.reboot.bootseq.history  u:object_r:vendor_mot_reboot_prop:s0
 ctl.vendor.ftmipcd             u:object_r:vendor_mot_ctl_ftmipcd_prop:s0
 ro.vendor.hw.boardversion         u:object_r:vendor_mot_hw_boardversion_prop:s0
-ro.vendor.manufacturedate         u:object_r:vendor_mot_init_prop:s0
-ro.vendor.sf.lcd_inverted         u:object_r:vendor_mot_init_prop:s0
-ro.vendor.sf.hwc_set_default_colormode   u:object_r:vendor_mot_init_prop:s0
-ro.vendor.mot.hw.                 u:object_r:vendor_mot_hw_prop:s0
-ro.vendor.mot.iccid               u:object_r:vendor_mot_init_prop:s0
-ro.vendor.mot.cust_md5            u:object_r:vendor_mot_init_prop:s0
-ro.vendor.mot.product_wave        u:object_r:vendor_mot_init_prop:s0
-ro.vendor.mot.gki.                u:object_r:vendor_mot_init_prop:s0
 ro.vendor.build.fingerprint u:object_r:vendor_mot_var_prop:s0
 ro.vendor.mot.base_buildid u:object_r:vendor_mot_var_prop:s0
 ctl.vendor.diag_mdlog                u:object_r:vendor_mot_ctl_mdlog_prop:s0
@@ -30,26 +27,7 @@ vendor.log.diag_mdlog                u:object_r:vendor_mot_mdlog_prop:s0
 persist.vendor.sys.diag_mdlog.on     u:object_r:vendor_mot_mdlog_prop:s0
 persist.vendor.sys.diag_mdlog.getlogs_size     u:object_r:vendor_mot_mdlog_prop:s0
 ctl.stop$vendor.diag_mdlog           u:object_r:vendor_mot_ctl_stop_mdlog_prop:s0
-ro.vendor.product.display      u:object_r:vendor_mot_product_prop:s0
-ro.vendor.product.device       u:object_r:vendor_mot_product_prop:s0
-ro.vendor.product.name         u:object_r:vendor_mot_product_prop:s0
-ro.vendor.product.hardware.sku.variant  u:object_r:vendor_mot_product_prop:s0
-ro.vendor.build.version.incremental u:object_r:vendor_mot_product_prop:s0
 ro.vendor.fsg-id        u:object_r:vendor_mot_var_prop:s0
-ro.boot.carrier                    u:object_r:vendor_mot_boot_prop:s0
-ro.boot.device                     u:object_r:vendor_mot_boot_prop:s0
-ro.boot.lcd_density                u:object_r:vendor_mot_boot_prop:s0
-ro.boot.fsg-id                     u:object_r:vendor_mot_boot_prop:s0
-ro.boot.hwrev                      u:object_r:vendor_mot_boot_prop:s0
-ro.boot.modelno                    u:object_r:vendor_mot_boot_prop:s0
-ro.boot.nav_keys                   u:object_r:vendor_mot_boot_prop:s0
-ro.boot.powerup_reason             u:object_r:vendor_mot_boot_prop:s0
-ro.boot.cid                        u:object_r:vendor_mot_boot_prop:s0
-ro.boot.bl_state                   u:object_r:vendor_mot_boot_prop:s0
-ro.boot.adb_early                  u:object_r:vendor_mot_boot_prop:s0
-ro.boot.force_aplogd_enable        u:object_r:vendor_mot_boot_prop:s0
-ro.boot.radio                      u:object_r:vendor_mot_boot_prop:s0
-ro.boot.last_powerup_reason        u:object_r:vendor_mot_boot_prop:s0
 persist.vendor.touch.       u:object_r:vendor_mot_touchscreen_prop:s0
 ro.boot.wifimacaddr  u:object_r:vendor_mot_unique_id_prop:s0
 ro.vendor.boot.serialno u:object_r:vendor_mot_unique_id_prop:s0

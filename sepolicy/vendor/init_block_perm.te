@@ -91,3 +91,8 @@ allow init_block_perm vendor_mot_prop:file { getattr map open read };
 # fsetid はブロックデバイスのモードを立てるのに要る - このドメインの仕事そのもの。
 allow init_block_perm vendor_utags_block_device:blk_file { getattr setattr };
 allow init_block_perm self:capability fsetid;
+
+
+# 上の vendor_mot_*_prop は property_contexts から外したので、
+# 実際に当たる bootloader_prop / vendor_default_prop 側にも与える。
+allow init_block_perm bootloader_prop:file { getattr map open read };

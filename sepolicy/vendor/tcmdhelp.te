@@ -147,3 +147,7 @@ allow tcmdhelp vendor_mot_prop:file { getattr map open read };
 # そちらにも同じ権限を与える。
 allow tcmdhelp vendor_proc_hw:dir { search };
 allow tcmdhelp vendor_proc_hw:file { append getattr ioctl lock map open read watch watch_reads write };
+
+# 上の vendor_mot_*_prop は property_contexts から外したので、
+# 実際に当たる bootloader_prop / vendor_default_prop 側にも与える。
+allow tcmdhelp bootloader_prop:file { getattr map open read };
