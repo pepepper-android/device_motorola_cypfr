@@ -29,3 +29,7 @@ genfscon sysfs /devices/platform/soc/soc:rt-pd-manager/extcon u:object_r:sysfs_e
 # カメラの v4l2 ノード名。Ready For の HAL が読む。QCOM は legacy-um の legacy/ 側で
 # 同じ video4linux/*/name を vendor_sysfs_graphics で貼っているので、それに合わせる。
 genfscon sysfs /devices/platform/soc/soc:qcom,cam-req-mgr/video4linux u:object_r:vendor_sysfs_graphics:s0
+
+# battery 側の wakeup。pc_port は前回貼ったが、同じ充電ノードの下に
+# power_supply/battery/wakeup54 もあり、そちらが残っていた。
+genfscon sysfs /devices/platform/soc/soc:mmi,discrete-charging/power_supply/battery/wakeup u:object_r:sysfs_wakeup:s0

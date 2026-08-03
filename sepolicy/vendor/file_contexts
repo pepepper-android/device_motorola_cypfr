@@ -120,3 +120,10 @@
 
 # Ready For のデスクトップモード用カメラ HAL。上のコメント参照。
 /(vendor|system/vendor)/bin/hw/motorola\.hardware\.camera\.desktop@2\.0-service   u:object_r:hal_camera_desktop_exec:s0
+
+# prodpersist (/mnt/product/persist)。fstab は wait,formattable,nofail で
+# マウントするが、ブロックデバイスが素の block_device のままで e2fsck が
+# 開けなかった。nofail なので起動は止まらないものの、毎回 fsck に失敗して
+# いた。共通ツリーは persist しか貼っていない。
+/dev/block/platform/soc/4804000\.ufshc/by-name/prodpersist   u:object_r:vendor_persist_block_device:s0
+/dev/block/bootdevice/by-name/prodpersist                    u:object_r:vendor_persist_block_device:s0

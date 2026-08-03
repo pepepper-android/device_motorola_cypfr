@@ -118,3 +118,34 @@ dontaudit {
 # Motorola の拡張テレフォニーアプリを積んでいないので、そもそも存在しない。
 # 見つからないのが正しい挙動なので、ログだけ止める。
 dontaudit vendor_qtelephony default_android_service:service_manager find;
+
+# これが enforcing で起動しなかった原因。
+#
+# init.oem.hw.sh:207
+#   eval motobox expat -u -f $xml_file $device_params "$@"
+#
+# motobox は Motorola の busybox 相当で、このスクリプトはその expat で
+# ハードウェア構成の XML を解析して ro.vendor.hw.* を組み立てる。そして
+# init.mmi.rc の on early-init は
+#
+#   exec_start vendor.oem-hw-sh
+#
+# で init をブロックして走らせ、その後に ro.sf.lcd_density や
+# ro.product.vendor.* の setprop と trigger mmi-priority が続く。ここで
+# こければ以降が全部落ちる。permissive では素通りしていた。
+#
+# motobox に独自の型を与えたとき、stock 由来の 23 ドメインには
+# motobox_exec の許可が付いてきたが、このスクリプトを実際に走らせるのは
+# 共通ツリーの vendor_moto_init_shell のほうで、そちらには何も付かなかった。
+# stock では init.oem.hw.sh が init_hw ドメインで動くのでこの穴は開かない。
+allow vendor_moto_init_shell motobox_exec:file rx_file_perms;
+
+# debugfs の tracing。init が mount できないだけで致命ではないが、
+# enforcing では毎回出る。
+allow init debugfs_tracing_debug:dir mounton;
+
+# サーマルが /proc/loadavg を見る。
+allow vendor_thermal-engine proc_loadavg:file r_file_perms;
+
+# crash_dump が RRO の中身を読む (スタックトレースの解決)。
+allow crash_dump vendor_overlay_file:file r_file_perms;
