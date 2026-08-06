@@ -295,4 +295,21 @@
     <!-- MMS user agent profile url -->
     <string name="config_mms_user_agent_profile_url" translatable="false">http://uaprof.motorola.com/phoneconfig/motov1/Profile/motov1.rdf</string>
 
+    <!-- 3.5mm ジャックの抜き差しを /dev/input の SW_HEADPHONE_INSERT で検出する。
+         WiredAccessoryManager は false だとこの経路ごと飛ばして
+         /sys/class/extcon と /sys/class/switch/h2w を見にいくが、この端末に
+         h2w は無く、ジャックは input デバイスとして出ている:
+
+           holi-9370_aw882xx-snd-card Headset Jack
+             SW_HEADPHONE_INSERT  SW_MICROPHONE_INSERT  SW_JACK_PHYSICAL_INSERT
+
+         カーネルもフレームワークの入力層もスイッチを見えていて
+         (dumpsys input が SwState (pressed) を出す)、それでも
+         dumpsys audio の Connected devices が空のままだったのはこれが理由。
+
+         holi 側の resource-overlay には元から true が入っているが、その RRO
+         (FrameworksResTarget) は PRODUCT_PACKAGES に無く、ビルドも
+         インストールもされていない。 -->
+    <bool name="config_useDevInputEventForAudioJack">true</bool>
+
 </resources>
