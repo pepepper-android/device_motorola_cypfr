@@ -288,6 +288,19 @@ persist.vendor.radio.sib16_support=1
 persist.vendor.radio.start_ota_daemon=0
 persist.vendor.radio.suppress_ussd_rel=1
 persist.vendor.radio.sw_mbn_update=0
+persist.vendor.radio.fetchqos=true
+
+# stock が vendor/build.prop で立てていて、こちらに無かったもの。
+#
+# multisim.config はこの端末では実際に dsds でなければならない -
+# ro.boot.product.hardware.sku が sku-ds-nfc_ese で、ds は dual SIM の意味。
+# 設定しないと TelephonyManager.getPhoneCount() が 1 を返し、Phone は 1 つしか
+# 作られず、2 枚目のスロットが使えない。
+persist.radio.multisim.config=dsds
+
+# モデムのスナップショット。stock と同じ値に揃える。
+persist.vendor.radio.snapshot_enabled=1
+persist.vendor.radio.snapshot_timer=22
 persist.vendor.rcs.presence.provision=0
 ro.vendor.radio.imei.sv=14
 
