@@ -157,3 +157,20 @@ allow crash_dump vendor_overlay_file:file r_file_perms;
 # common 側には手を入れず、ここで足す。
 set_prop(vendor_moto_init_shell, vendor_mot_product_prop)
 set_prop(vendor_moto_init_shell, vendor_mot_init_prop)
+
+# 起動経路の oneshot サービス 28 個を enforcing 下で init に ctl.start させて
+# 洗い出したもの。
+
+# cypfr は指紋センサーが二社構成で、fpc_hal と ets_hal が同じ HIDL を出す。
+# 使わない方を init スクリプトが止めるので ctl.stop が要る。common 側には
+# ctl_start_prop だけがあって対になっていなかった。
+#   avc: denied { set } for property=ctl.stop$ets_hal
+allow vendor_moto_init_shell ctl_stop_prop:property_service set;
+
+# QTI の init スクリプトが wifi のプロパティを読む。wifi_prop は
+# system_public_prop なので vendor から読んで差し支えない。
+get_prop(vendor_qti_init_shell, wifi_prop)
+
+# FPC センサーの sysfs を指紋 HAL が読む。
+allow hal_fingerprint_default sysfs_fpc:dir r_dir_perms;
+allow hal_fingerprint_default sysfs_fpc:file r_file_perms;
