@@ -149,3 +149,11 @@ allow vendor_thermal-engine proc_loadavg:file r_file_perms;
 
 # crash_dump が RRO の中身を読む (スタックトレースの解決)。
 allow crash_dump vendor_overlay_file:file r_file_perms;
+
+# init.oem.hw.sh はハードウェア構成からこれらを組み立てて設定する。stock では
+# init_hw ドメインで動くのでその許可を持つが、この端末では
+# device/motorola/common の file_contexts が vendor_moto_init_shell_exec を
+# 当てており (私のパターンより具体的で勝つ)、そちらのドメインで動く。
+# common 側には手を入れず、ここで足す。
+set_prop(vendor_moto_init_shell, vendor_mot_product_prop)
+set_prop(vendor_moto_init_shell, vendor_mot_init_prop)

@@ -38,3 +38,28 @@ ro.vendor.hw.fps_id2            u:object_r:vendor_mot_fingerprint_prop:s0
 vendor.hw.fingerprint.hwid      u:object_r:vendor_mot_fingerprint_prop:s0
 vendor.hw.fps.ident             u:object_r:vendor_mot_fingerprint_prop:s0
 persist.vendor.hardware.fingerprint  u:object_r:vendor_mot_fingerprint_prop:s0
+
+# 9d9622f で vendor_mot_product_prop / vendor_mot_init_prop の行をまとめて
+# 外したが、あれは広すぎた。問題だったのは ro.boot.* を vendor_mot_boot_prop に
+# 移したことで、あちらは coredomain の radio が読むので restricted 型に置けない。
+# 下の 5 つは coredomain が読まないので stock と同じ型に戻す。
+#
+# 戻す理由は実測にある。enforcing 下で init に ctl.start させると、
+# init.oem.hw.sh がこれらを設定できずに止まる:
+#
+#   avc: denied { set } for property=ro.vendor.product.device
+#     scontext=u:r:vendor_moto_init_shell tcontext=u:object_r:vendor_default_prop
+#
+# vendor_default_prop は neverallow で init/vendor_init 以外 set 禁止なので、
+# 許可を足すのではなくラベルを正す。この 5 つは build.prop にも無く、
+# このスクリプトだけが設定元で、init.mmi.rc の on early-init が
+#
+#   setprop ro.product.vendor.device ${ro.vendor.product.device}
+#   setprop ro.boot.product.hardware.sku ${ro.vendor.product.hardware.sku.variant}
+#
+# と使う。空になると端末の同一性と SKU が丸ごと消える。
+ro.vendor.product.display               u:object_r:vendor_mot_product_prop:s0
+ro.vendor.product.device                u:object_r:vendor_mot_product_prop:s0
+ro.vendor.product.name                  u:object_r:vendor_mot_product_prop:s0
+ro.vendor.product.hardware.sku.variant  u:object_r:vendor_mot_product_prop:s0
+ro.vendor.mot.gki.                      u:object_r:vendor_mot_init_prop:s0
