@@ -119,8 +119,10 @@ allow init_fingerprint vendor_mot_prop:property_service { set };
 allow init_fingerprint vendor_proc_hw:dir { getattr ioctl lock open read search watch watch_reads };
 allow init_fingerprint vendor_proc_hw:file { append create getattr ioctl lock map open read rename setattr unlink watch watch_reads write };
 # 同上。stock は persist_fps_file、共通ツリーは vendor_persist_fingerprint_file。
-allow init_fingerprint vendor_persist_fingerprint_file:dir search;
-allow init_fingerprint vendor_persist_fingerprint_file:file { getattr open read };
+allow init_fingerprint vendor_persist_fingerprint_file:dir { search write add_name };
+# 検出したセンサーの vendor_id を書き出すので、読むだけでは足りない。
+# stock 名 (persist_fps_file) 側には上で create/write まで与えてある。
+allow init_fingerprint vendor_persist_fingerprint_file:file create_file_perms;
 
 
 # 上の vendor_mot_*_prop は property_contexts から外したので、

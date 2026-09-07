@@ -91,3 +91,9 @@ allow fpc_ident vendor_mot_prop:property_service { set };
 # 上の vendor_mot_*_prop は property_contexts から外したので、
 # 実際に当たる bootloader_prop / vendor_default_prop 側にも与える。
 allow fpc_ident bootloader_prop:file { getattr map open read };
+# 実機の denial から。stock は /sys/class/fingerprint を sysfs_fpc と呼び
+# 上でその許可を持っているが、この端末では device/motorola/common が
+# vendor_sysfs_fingerprint で貼っている。同じ対象なので同じだけ与える。
+allow fpc_ident vendor_sysfs_fingerprint:dir r_dir_perms;
+allow fpc_ident vendor_sysfs_fingerprint:file r_file_perms;
+allow fpc_ident vendor_sysfs_fingerprint:lnk_file r_file_perms;
