@@ -33,3 +33,13 @@ genfscon sysfs /devices/platform/soc/soc:qcom,cam-req-mgr/video4linux u:object_r
 # battery 側の wakeup。pc_port は前回貼ったが、同じ充電ノードの下に
 # power_supply/battery/wakeup54 もあり、そちらが残っていた。
 genfscon sysfs /devices/platform/soc/soc:mmi,discrete-charging/power_supply/battery/wakeup u:object_r:sysfs_wakeup:s0
+
+# 充電回路側の wakeup。pc_port と battery は貼ったが、charger と 1-003b 配下が
+# 残っていた。system_suspend は sysfs_wakeup の読み取り許可を AOSP から
+# もらっているので、ラベルさえ正せば許可は要らない。
+genfscon sysfs /devices/platform/soc/4c88000.i2c/i2c-1/1-003b/power_supply/charger/wakeup u:object_r:sysfs_wakeup:s0
+genfscon sysfs /devices/platform/soc/4c88000.i2c/i2c-1/1-003b/power_supply/battery/wakeup u:object_r:sysfs_wakeup:s0
+
+# Ready For の HAL が読む v4l2 ノード名。cam-req-mgr は貼ったが cam-sync が
+# 残っていた。
+genfscon sysfs /devices/platform/soc/soc:qcom,cam-sync/video4linux u:object_r:vendor_sysfs_graphics:s0

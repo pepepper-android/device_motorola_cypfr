@@ -176,3 +176,7 @@ allow hal_fingerprint_default sysfs_fpc:dir r_dir_perms;
 allow hal_fingerprint_default sysfs_fpc:file r_file_perms;
 # /sys/class/fpc は symlink をたどる作りなので lnk_file も要る。
 allow hal_fingerprint_default sysfs_fpc:lnk_file r_file_perms;
+
+# enforcing での実起動ログから。
+# サーマルが /proc/stat で負荷を見る。
+allow vendor_thermal-engine proc_stat:file r_file_perms;

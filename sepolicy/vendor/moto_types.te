@@ -88,7 +88,12 @@ vendor_restricted_prop(vendor_mot_hw_prop);
 vendor_restricted_prop(vendor_mot_init_prop);
 vendor_restricted_prop(vendor_mot_mdlog_prop);
 vendor_restricted_prop(vendor_mot_nfc_prop);
-vendor_restricted_prop(vendor_mot_product_prop);
+# stock は restricted で宣言したうえで allow domain ... read を書き、実質
+# 全ドメインに開放している。Treble 分割のあるこちらで domain 属性に許可を
+# 足すと coredomain ぶんが neverallow に当たるので、宣言を public にして
+# 同じ結果を得る。rild が ro.vendor.product.* を読めず、enforcing 起動で
+# 拒否されていた - ro.boot.* を restricted に移したときと同じ罠だった。
+vendor_public_prop(vendor_mot_product_prop);
 vendor_restricted_prop(vendor_mot_reboot_prop);
 vendor_restricted_prop(vendor_mot_tcmd_prop);
 vendor_restricted_prop(vendor_mot_touchscreen_prop);
