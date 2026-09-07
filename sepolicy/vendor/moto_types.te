@@ -85,7 +85,19 @@ vendor_restricted_prop(vendor_mot_factory_prop);
 vendor_restricted_prop(vendor_mot_fingerprint_prop);
 vendor_internal_prop(vendor_mot_hw_boardversion_prop);
 vendor_restricted_prop(vendor_mot_hw_prop);
-vendor_restricted_prop(vendor_mot_init_prop);
+# vendor_mot_product_prop と同じ理由で public にする。stock は restricted の
+# まま surfaceflinger や vendor_init にも読み取りを許しているが、Treble 分割の
+# あるこちらでは coredomain への許可が neverallow に当たる。
+#
+# これが enforcing 起動でタッチが死んだ原因だった。init.mmi.overlay.rc が
+#
+#   insmod /vendor/lib/modules/${ro.vendor.mot.gki.path}/ili9882_mmi.ko
+#
+# と書いており、vendor_init がこのプロパティを読めないと ${...} が空に展開され、
+# /vendor/lib/modules//ili9882_mmi.ko という存在しないパスになってタッチ
+# ドライバがロードされない。同じ経路に nfc_i2c.ko や gcore_mmi.ko もある。
+# 早期起動なので logd がまだ動いておらず、logcat には残らなかった。
+vendor_public_prop(vendor_mot_init_prop);
 vendor_restricted_prop(vendor_mot_mdlog_prop);
 vendor_restricted_prop(vendor_mot_nfc_prop);
 # stock は restricted で宣言したうえで allow domain ... read を書き、実質
