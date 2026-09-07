@@ -112,3 +112,10 @@ allow aplogd vendor_proc_hw:file { getattr ioctl lock map open read watch watch_
 # 上の vendor_mot_*_prop は property_contexts から外したので、
 # 実際に当たる bootloader_prop / vendor_default_prop 側にも与える。
 allow aplogd bootloader_prop:file { getattr map open read };
+# --- 型名のずれの一括補完 ---
+# 収穫元の stock ポリシーと device/motorola/common で、同じオブジェクトの型名が
+# 食い違う。stock 名のルールは書いてあっても何にも当たらないので、実機で
+# ls -Z して確認した実際の型に同じ権限を写す。これまで touchscreen / utags /
+# fps ディレクトリ / fingerprint sysfs と 1 つずつ実機ログで出てきたぶんを、
+# 残り全部まとめて埋める。
+allow aplogd mnt_vendor_file:lnk_file { read };

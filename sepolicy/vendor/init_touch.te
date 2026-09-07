@@ -111,3 +111,12 @@ allow init_touch vendor_mot_prop:property_service { set };
 # 実際に当たる bootloader_prop / vendor_default_prop 側にも与える。
 allow init_touch bootloader_prop:file { getattr map open read };
 allow init_touch vendor_default_prop:property_service { set };
+# --- 型名のずれの一括補完 ---
+# 収穫元の stock ポリシーと device/motorola/common で、同じオブジェクトの型名が
+# 食い違う。stock 名のルールは書いてあっても何にも当たらないので、実機で
+# ls -Z して確認した実際の型に同じ権限を写す。これまで touchscreen / utags /
+# fps ディレクトリ / fingerprint sysfs と 1 つずつ実機ログで出てきたぶんを、
+# 残り全部まとめて埋める。
+allow init_touch mnt_vendor_file:lnk_file { read };
+allow init_touch vendor_sysfs_touchpanel:dir { getattr ioctl lock open read search watch watch_reads };
+allow init_touch vendor_sysfs_touchpanel:file { append getattr ioctl lock map open read setattr watch watch_reads write };
